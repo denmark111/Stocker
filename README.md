@@ -9,6 +9,8 @@ Machine learning text analyzer used in this project is AWS Comprehend.
 Crawled news article datas are feeded through AWS Comprehend API and then processed.  
 Processed data can be received via JSON data format.  
 
+AWS Comprehend could be used with AWS Translate to provide wide variety of language support.  
+
 ### Visualization with JavaScript
 
 Collected datas from the AWS Comprehend are trimmed and organized to be displayed.  
@@ -18,14 +20,16 @@ Data visualization is performed with Charts.js & D3.js which is popular open sou
 
 To run this application on your own, you need to meet requirements shown below.  
 
-- `Python 3`  
+- **Python 3**  
 
-Python 3 is required for web crawling.  
+    Python 3 is required for web crawling.  
+    built-in `html.Parser` library is used to parse html code.
 
-- `AWS Account`
+- **AWS Account**
 
-AWS is required for AWS Comprehend service.  
+    AWS is required for AWS Comprehend service.  
+    To learn more about AWS Comprehend, visit [here](https://aws.amazon.com/ko/comprehend/)
 
-- `Apache web server`
+- **Apache web server**
 
-Required to actually run the application
+    Required to actually run the application.  

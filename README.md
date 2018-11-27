@@ -13,3 +13,19 @@ Processed data can be received via JSON data format.
 
 Collected datas from the AWS Comprehend are trimmed and organized to be displayed.  
 Data visualization is performed with Charts.js & D3.js which is popular open source JavaScript library.  
+
+### Prerequisites
+
+To run this application on your own, you need to meet requirements shown below.  
+
+- `Python 3`  
+
+Python 3 is required for web crawling.  
+
+- `AWS Account`
+
+AWS is required for AWS Comprehend service.  
+
+- `Apache web server`
+
+Required to actually run the application

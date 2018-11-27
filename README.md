@@ -33,3 +33,5 @@ To run this application on your own, you need to meet requirements shown below.
 - **Apache web server**
 
     Required to actually run the application.  
+
+### Installation

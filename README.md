@@ -9,7 +9,9 @@ It's purpose is to crawl stock info web pages and analyze various news article w
 
 2. [www.seekingalpha.com](www.seekingalpha.com)
 
-3. TBD
+3. [www.fidelity.com](www.fidelity.com)
+
+4. TBD
 
 4. [www.fidelity.com](www.fidelity.com)
 

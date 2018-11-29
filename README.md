@@ -38,7 +38,7 @@ To run this application on your own, you need to meet requirements shown below.
 - **AWS Account**
 
     AWS is required for AWS Comprehend service.  
-    To learn more about AWS Comprehend, visit [here](https://aws.amazon.com/ko/comprehend/)
+    To learn more about AWS Comprehend, visit [here](https://aws.amazon.com/ko/comprehend/)  
     AWS is integrated as API in each crawler.
 
 - **Apache web server**

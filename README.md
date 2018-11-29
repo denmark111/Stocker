@@ -9,7 +9,7 @@ It's purpose is to crawl stock info web pages and analyze various news article w
 
 2. [www.seekingalpha.com](www.seekingalpha.com)
 
-3. 
+3. TBD
 
 ### Machine learning integration w/ AWS Comprehend
 
@@ -37,9 +37,12 @@ To run this application on your own, you need to meet requirements shown below.
 
     AWS is required for AWS Comprehend service.  
     To learn more about AWS Comprehend, visit [here](https://aws.amazon.com/ko/comprehend/)
+    AWS is integrated as API in each crawler.
 
 - **Apache web server**
 
     Required to actually run the application.  
 
 ### Installation
+
+1. TBD

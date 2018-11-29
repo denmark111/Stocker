@@ -5,6 +5,7 @@
 
 from html.parser import HTMLParser
 import urllib.request, urllib.error
+import re
 
 datas = []
 
@@ -24,20 +25,36 @@ class articleParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.recording = False
+        self.inArticleDiv = False
+        self.inUselessDiv = False
 
     def handle_starttag(self, tag, attrs):
-        if tag != 'p':
+
+        if tag != 'p' and tag != 'div':
             return
+
+        attr = dict(attrs)
+
+        if 'id' in attr:
+            if attr['id'] == 'articleText' or attr['id'] == 'articlebody':
+                self.inArticleDiv = True
+            else:
+                self.inUselessDiv = True
+
         self.recording = True
 
     def handle_endtag(self, tag):
         if tag == 'p' and self.recording:
             self.recording = False
+        elif tag == 'div' and self.inUselessDiv:
+            self.inUselessDiv = False
+        elif tag == 'div' and self.inArticleDiv:
+            self.inArticleDiv = False
 
     def handle_data(self, data):
-        if self.recording:
-            datas.append(data)
-
+        if self.recording and self.inArticleDiv:
+            if not self.inUselessDiv:
+                datas.append(data)
 
 
 class getNewsArticle():
@@ -81,42 +98,38 @@ class getNewsArticle():
 
     def extractArticle(self, url):
 
-        article = ''
-
         page = self._getLinks(url)
 
         for links in page:
-            # print(links)
+            article = ''
+
             datas.clear()
 
             print(links)
             self._getParsed(links, True)
 
-            print(datas)
-
             for d in datas:
                 article += d
-                print(article)
 
-        del article
+            article = article.replace('\n', '')
+            article = article.replace('\r', '')
+
+            article = re.sub(' +', ' ', article)
+            print(article)
+
+            del article
 
 
 if __name__ in "__main__":
 
     stock_name = 'aapl'
+    round_count = 10
     stock_link = 'https://www.nasdaq.com/symbol/' + stock_name + '/news-headlines?page='
     parser = getNewsArticle()
 
     output = []
     i = 1
 
-    while i < 10:
+    while i < round_count:
         target = stock_link + str(i)
         parser.extractArticle(target)
-
-        i += 1
-        # if not output[i - 1]:
-        #     break
-        # else:
-        #     print(output[i - 1])
-        #     i += 1

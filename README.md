@@ -7,7 +7,9 @@ It's purpose is to crawl stock info web pages and analyze various news article w
 
 1. [www.nasdaq.com](www.nasdaq.com)  
 
-2. 
+2. [www.seekingalpha.com](www.seekingalpha.com)
+
+3. 
 
 ### Machine learning integration w/ AWS Comprehend
 

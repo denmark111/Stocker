@@ -13,8 +13,6 @@ It's purpose is to crawl stock info web pages and analyze various news article w
 
 4. TBD
 
-4. [www.fidelity.com](www.fidelity.com)
-
 ### Machine learning integration w/ AWS Comprehend
 
 Machine learning text analyzer used in this project is AWS Comprehend.  

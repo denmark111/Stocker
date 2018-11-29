@@ -1,9 +1,16 @@
+from html.parser import HTMLParser
+import urllib.request, urllib.error
+from queue import *
 
-from html.parser import HTMLParser 
-import urllib.request, urllib.error 
-  
-links = [] 
-  
+co_ar = LifoQueue() # collect article / stack / ☆☆☆☆☆☆☆☆
+
+tmp_stk = LifoQueue() # article title buffer1/ stack
+tmp_q = Queue() # article title buffer2 /queue
+
+links = []
+output = [] # get page in fidelity.com
+result = [] # result in extract
+
 class MyHTMLParser(HTMLParser): 
   
     def handle_starttag(self, tag, attrs): 
@@ -14,14 +21,12 @@ class MyHTMLParser(HTMLParser):
         links.append(attr) 
  
 def extract(url): 
-  
-      result = [] 
-  
+   
       try: 
           f = urllib.request.urlopen(url) 
-          html = f.read()
+          html = f.read() 
           source = html.decode('utf8') 
-          f.close()
+          f.close() 
       except urllib.error.HTTPError as e: 
           print(e, 'while fetching', url) 
           return 
@@ -42,17 +47,17 @@ def extract(url):
 if __name__ in "__main__": 
   
       stock_name = 'amzn' 
-      pagenum=0
+      pagenum = 0
       stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected='
       stock_link2 =  '&navState=root%7Croot-' 
       stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
-      output = [] 
+
   
       for pagenum in range(0, 10): 
           target = stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum * 10) + stock_link3
             
           print(target) 
-  
-          output.append(extract(target)) 
-          print(output[pagenum - 1]) 
-
+          
+          output.append(extract(target))
+          
+          print(output[pagenum]) 

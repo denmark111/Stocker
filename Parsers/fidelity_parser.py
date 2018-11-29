@@ -43,12 +43,13 @@ if __name__ in "__main__":
   
       stock_name = 'amzn' 
       pagenum=0
-      stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected=2&navState=root%7Croot-' 
-      stock_link2 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
+      stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected='
+      stock_link2 =  '&navState=root%7Croot-' 
+      stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
       output = [] 
   
       for pagenum in range(0, 10): 
-          target = stock_link1 + str(pagenum * 10) + stock_link2
+          target = stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum * 10) + stock_link3
             
           print(target) 
   

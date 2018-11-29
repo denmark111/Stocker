@@ -5,11 +5,11 @@ It's purpose is to crawl stock info web pages and analyze various news article w
 
 ### Supported stock news website
 
-1. [www.nasdaq.com](www.nasdaq.com)  
+1. [www.nasdaq.com](https://www.nasdaq.com)  
 
-2. [www.seekingalpha.com](www.seekingalpha.com)
+2. [www.seekingalpha.com](https://www.seekingalpha.com)
 
-3. [www.fidelity.com](www.fidelity.com)
+3. [www.fidelity.com](https://www.fidelity.com)
 
 4. TBD
 

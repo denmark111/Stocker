@@ -7,7 +7,9 @@ Author: Surjith S M
    GLOBAL STYLES
    ============================================================== */
 body {
-  font-family: 'Roboto', sans-serif; }
+  font-family: 'Roboto', sans-serif;
+  overflow: hidden;
+}
 
 h1 {
   font-size: 72px;
@@ -157,8 +159,6 @@ p {
 
 /*
 .slider {
-  background: url(../images/slider.jpg) no-repeat;
-  background-size: cover;
   min-height: 800px; }
   @media (max-width: 992px) {
     .slider {
@@ -173,7 +173,7 @@ p {
   -webkit-filter: blur(8px);
 
   /* Full height */
-  height: 1000px;
+  height: 1335px;
   width: 100%;
 
   /* Center and scale the image nicely */
@@ -188,7 +188,6 @@ p {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  width: 80%;
 }
 
 .btn-outline-light {
@@ -275,24 +274,3 @@ p {
 .search-icon {
   font-size: 15px;
   padding-right: 10px; }
-
-.slider-link {
-  color: #909090;
-  margin: 45px 0 0;
-  font-size: 19px; }
-  @media (max-width: 480px) {
-    .slider-link {
-      margin: 18px 0 0; }
-      .slider-link a,
-      .slider-link span {
-        display: block; } }
-  .slider-link a {
-    color: #909090;
-    text-decoration: underline;
-    -webkit-transition: 0.3s;
-    -o-transition: 0.3s;
-    transition: 0.3s; }
-    .slider-link a:hover {
-      color: #fff; }
-  .slider-link span {
-    padding: 0 18px; }

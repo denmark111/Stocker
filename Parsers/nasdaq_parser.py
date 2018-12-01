@@ -94,7 +94,7 @@ class articleParser(HTMLParser):
 
 # Define crawler class
 # This class handles every parsing and crawling of a given news page link
-class getNewsArticle():
+class getNasdaq():
 
     def __init__(self):
 
@@ -199,7 +199,7 @@ if __name__ in "__main__":
     stock_link = 'https://www.nasdaq.com/symbol/' + stock_name + '/news-headlines?page='
     
     # Declare crawler object to use
-    parser = getNewsArticle()
+    parser = getNasdaq()
 
     # Iterator
     i = 1

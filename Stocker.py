@@ -17,3 +17,4 @@ if __name__ in '__main__':
     seekingAlpha = getSeeking()
 
     # Start analistics with AWS Comprehend API
+    

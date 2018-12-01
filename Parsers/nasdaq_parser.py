@@ -58,13 +58,14 @@ class articleParser(HTMLParser):
 
             # If attribute 'id' is either 'articleText' or 'articlebody'
             # set flag to True
+            # Currently not working possible bug?
             if attr['id'] == 'articleText' or attr['id'] == 'articlebody':
                 self.inArticleDiv = True
 
-            # If not, set useless flag to True
-            # This filters out useless <div>...</div>s between article div
-            else:
-                self.inUselessDiv = True
+        # If not, set useless flag to True
+        # This filters out useless <div>...</div>s between article div
+        else:
+            self.inUselessDiv = True
 
         # Set flag to read sources
         self.recording = True

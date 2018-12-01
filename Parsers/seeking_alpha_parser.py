@@ -6,6 +6,8 @@
 from html.parser import HTMLParser
 import urllib.request, urllib.error
 import re
+import boto3
+import json
 
 # Global variable for storing temporary parsed data
 datas = []
@@ -97,7 +99,7 @@ class getNewsArticle():
     def __init__(self):
 
         # Currently not in use
-        self.article = []
+        self.comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')
 
     # This is internal function
     # Retrieve parsed data from the given link
@@ -190,23 +192,11 @@ class getNewsArticle():
             article = re.sub(' +', ' ', article)
             print(article)
 
+            print('Calling DetectSentiment')
+            print(json.dumps(self.comprehend.detect_sentiment(Text=article, LanguageCode='en'), sort_keys=True, indent=4))
+            print('End of DetectSentiment\n')
+
             del article
-
-def extract(url):
-
-    result = []
-
-    try:
-        opener = urllib.request.build_opener()
-        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-        urllib.request.install_opener(opener)
-        f = urllib.request.urlopen(url)
-        html = f.read()
-        source = html.decode('utf8')
-        f.close()
-    except urllib.error.HTTPError as e:
-        print(e, 'while fetching', url)
-        return
 
 
 if __name__ in "__main__":

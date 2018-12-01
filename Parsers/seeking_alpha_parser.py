@@ -35,20 +35,20 @@ class articleParser(HTMLParser):
         HTMLParser.__init__(self)
         self.inArticleDiv = False
         self.inUselessDiv = False
+        self.inScript = False
 
     # Get start tags
     def handle_starttag(self, tag, attrs):
 
         # If start tag is not 'div', skip to the next line
-        if tag != 'div':
+        if tag != 'div' and tag != 'script':
             return
+
+        if tag == 'script':
+            self.inScript = True
 
         # If start tag is 'div', get attributes
         attr = dict(attrs)
-
-        # If not, set useless flag to True
-        # This filters out useless <div>...</div>s between article div
-        self.inUselessDiv = True
 
         # See if 'class' is in attribute
         # !! This is website specific !!
@@ -62,7 +62,11 @@ class articleParser(HTMLParser):
             # Currently not working possible bug?
             if attr['class'] == 'artText':
                 self.inArticleDiv = True
-                self.inUselessDiv = False
+
+        # If not, set useless flag to True
+        # This filters out useless <div>...</div>s between article div
+        else:
+            self.inUselessDiv = True
 
     # Get end tags
     def handle_endtag(self, tag):
@@ -72,14 +76,18 @@ class articleParser(HTMLParser):
             self.inUselessDiv = False
 
         # If end tag is 'div' and is article div, finish searching for tag 'p'
-        if tag == 'div' and self.inArticleDiv:
+        elif tag == 'div' and self.inArticleDiv:
             self.inArticleDiv = False
+
+        elif tag == 'script' and self.inScript:
+            self.inScript = False
 
     # Read data wo/ any tags which is the actual article data needed
     def handle_data(self, data):
         if self.inArticleDiv:
             if not self.inUselessDiv:
-                datas.append(data)
+                if not self.inScript:
+                    datas.append(data)
 
 
 # Define crawler class

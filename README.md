@@ -41,10 +41,21 @@ To run this application on your own, you need to meet requirements shown below.
     To learn more about AWS Comprehend, visit [here](https://aws.amazon.com/ko/comprehend/)  
     AWS is integrated as API in each crawler.
 
+- **AWS CLI**
+
+    AWS Command Line Interface is required for AWS Comprehend API to work properly.  
+    For setting up AWS CLI, check [this](https://docs.aws.amazon.com/ko_kr/comprehend/latest/dg/setup-awscli.html) tutorial.  
+
 - **Apache web server**
 
     Required to actually run the application.  
 
 ### Installation
 
-1. TBD
+1. This application requires Python 3.  If you don't have it already installed, visit [here](https://www.python.org/downloads/) and download the lastest version.  
+
+2. Use command below to install necessary modules for Python.  
+    `$ pip install awscli`
+    `$ pip install boto3`
+
+3. TBD

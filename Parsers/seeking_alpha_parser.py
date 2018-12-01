@@ -97,9 +97,8 @@ class articleParser(HTMLParser):
 class getNewsArticle():
 
     def __init__(self):
-
-        # Currently not in use
-        self.comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')
+        
+        self.result = []
 
     # This is internal function
     # Retrieve parsed data from the given link
@@ -191,12 +190,12 @@ class getNewsArticle():
 
             article = re.sub(' +', ' ', article)
             print(article)
-
-            print('Calling DetectSentiment')
-            print(json.dumps(self.comprehend.detect_sentiment(Text=article, LanguageCode='en'), sort_keys=True, indent=4))
-            print('End of DetectSentiment\n')
+            self.result.append(article)
 
             del article
+
+    def getResult(self):
+        return self.result
 
 
 if __name__ in "__main__":

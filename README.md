@@ -55,7 +55,7 @@ To run this application on your own, you need to meet requirements shown below.
 1. This application requires Python 3.  If you don't have it already installed, visit [here](https://www.python.org/downloads/) and download the lastest version.  
 
 2. Use command below to install necessary modules for Python.  
-    `$ pip install awscli`
+    `$ pip install awscli`  
     `$ pip install boto3`
 
 3. TBD

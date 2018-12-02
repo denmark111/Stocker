@@ -23,17 +23,9 @@ class linkParser(HTMLParser):
 
         # Add it to the global datas list
         datas.append(attr)
-              
-    for l in datas: 
-        if 'target' in l and 'title' in l:  
-            if l['target'] == '_top': 
-                if l['href']!='https://www.fidelity.com/sector-investing/overview' : 
-                   result.append(l['href'])
-                   
-                   #output.append(l['href'].strip('https://www.fidelity.com/news/article/compony-news' + 'https://www.fidelity.com/news/article/default' + 'https://www.fidelity.com/news/article/us-markets' + 'https://www.fidelity.com/news/article/investing-ideas' + 'https://www.fidelity.com/news/article/mergers-and-quisition' + 'https://www.fidelity.com/news/article/technology'))
-                   output.append(l['href'].split('/')[6])
+       
         
-    datas.clear() 
+
 
 class articleParser(HTMLParser):
 
@@ -48,7 +40,7 @@ class articleParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If start tag is neither 'p' nor 'div', skip to the next line
-        if tag != 'p' or tag != 'div':
+        if tag != 'div'  or tag != 'chron':
             return
 
         # If start tag is 'p' or 'div', get attributes
@@ -63,7 +55,7 @@ class articleParser(HTMLParser):
         if 'class' in attr :
 
             # If attribute 'id' is either 'articleText' or 'articlebody'
-            if attr['class'] == 'scl-news-article--description ng-binding' :
+            if attr['class'] == 'scl-news-article--description ng-binding' or attr['class'] == 'news.text | to_trusted':
                 self.inArticleDiv = True
 
             # If not, set useless flag to True
@@ -124,7 +116,9 @@ class getNewsArticle():
         except urllib.error.HTTPError as e:
             print(e, 'while fetching', url)
             return
-
+        except urllib.error.HTTPError as h:
+            print(h, 'while fetching', url)
+            return
         # For crawling for links, use linkParser class
         if not isArticle:
             parser = linkParser()
@@ -140,20 +134,19 @@ class getNewsArticle():
     def _getLinks(self, url):
 
         # Temporary list for keeping multiple links
-        result = []
-
+        
+        
         # Retrieve parsed data from the url
-        self._getParsed(url)
+        #self._getParsed(url)
 
         # Iterate each html line and get reference link
         # !! This is website specific !!
         for l in datas: 
            if 'target' in l and 'title' in l:  
-             if l['target'] == '_top':
+             if l['target'] == '_top': 
                  # Top list always contains trash link 
                 if l['href']!='https://www.fidelity.com/sector-investing/overview' : 
                    result.append(l['href'])
-                   
                    #output.append(l['href'].strip('https://www.fidelity.com/news/article/compony-news' + 'https://www.fidelity.com/news/article/default' + 'https://www.fidelity.com/news/article/us-markets' + 'https://www.fidelity.com/news/article/investing-ideas' + 'https://www.fidelity.com/news/article/mergers-and-quisition' + 'https://www.fidelity.com/news/article/technology'))
                    output.append(l['href'].split('/')[6])
 
@@ -164,35 +157,40 @@ class getNewsArticle():
         return None
 
     # This function is called by the user
-    def extractArticle(self, url):
+    def extractArticle(self, url): 
 
-        self._getLinks(url)
+        #page = self._getLinks(url)
 
         # temp_result = result       
-        temp_result = result.copy()
+        #temp_result = page.copy()
         #sort url date
-        output.sort()
-        #sort url in chronological order ////////
-        for i in range(0,len(result)) :
-            result[i]=temp_result[int(output[i].split('=')[1])-1]
 
+
+        #output.sort()
+        #sort url in chronological order ////////
+        #for i in range(0,len(output)) :
+        #    #temp_result[i]=page[int(output[i].split('=')[1])-1]
+        #    temp_result.append(page[int(output[i].split('Index=')[1])-1])
+
+
+        #page = result.copy()
         #for i in range(0,len(result)):    
         #  print(result[i])
         #sort url in chronological order ////////
 
-        for links in result:
+        for links in url:
             article = ''
 
             datas.clear()
 
-            print(links)
+            #print(links)
             self._getParsed(links, True)
-
+            
             for d in datas:
                 article = article + d
 
-            article = article.replace('\n', '')
-            article = article.replace('\r', '')
+            article = article.replace('\n', '1')
+            article = article.replace('\r', '2')
 
             article = re.sub(' +', ' ', article)
             print(article)
@@ -202,7 +200,6 @@ class getNewsArticle():
 if __name__ in "__main__": 
   
       stock_name = 'amzn' 
-      pagenum = 0 
       stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected=' 
       stock_link2 =  '&navState=root%7Croot-' 
       stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
@@ -217,13 +214,22 @@ if __name__ in "__main__":
       parser = getNewsArticle()
 
       # Iterator
-      
-      round_count = 10
-      while pagenum < round_count:
-
+      target=[]
+      for pagenum in range(0,10):
+          target.append(stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3)
+          parser._getLinks(target[pagenum])
         # Insert page number to the link
-        target = stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3 
-
+      temp_result = result.copy()
+      #sort url date
+      output.sort()
+      
+      #sort url in chronological order
+      result.clear() 
+      for i in range(0,len(output)) :
+          result.append(temp_result[int(output[i].split('=')[1])-1])
+      #for i in range(0,100):    
+      #    print(result[i])  
         # Run crawler
-        parser.extractArticle(target)
-        pagenum = pagenum + 1
+      while 1 <10 :  
+          parser.extractArticle(result)
+        #pagenum = pagenum + 1

@@ -1,38 +1,38 @@
 var barChartData = {
   labels: [
-    "Absence of OB",
-    "Closeness",
-    "Credibility",
-    "Heritage",
-    "M Disclosure",
-    "Provenance",
-    "Reliability",
-    "Transparency"
+    "April",
+    "May",
+    "June",
+    "July",
+    "Augest",
+    "September",
+    "October",
+    "November"
   ],
   datasets: [
     {
-      label: "American Express",
-      backgroundColor: "pink",
-      borderColor: "red",
+      label: "Netural",
+      backgroundColor: "lightgreen",
+      borderColor: "green",
       borderWidth: 1,
       data: [3, 5, 6, 7,3, 5, 6, 7]
     },
     {
-      label: "Mastercard",
+      label: "Positive",
       backgroundColor: "lightblue",
       borderColor: "blue",
       borderWidth: 1,
       data: [4, 7, 3, 6, 10,7,4,6]
     },
     {
-      label: "Paypal",
-      backgroundColor: "lightgreen",
-      borderColor: "green",
+      label: "Negative",
+      backgroundColor: "pink",
+      borderColor: "red",
       borderWidth: 1,
       data: [10,7,4,6,9,7,3,10]
     },
     {
-      label: "Visa",
+      label: "Mixed",
       backgroundColor: "yellow",
       borderColor: "orange",
       borderWidth: 1,
@@ -48,7 +48,7 @@ var chartOptions = {
   },
   title: {
     display: true,
-    text: "Chart.js Bar Chart"
+    text: "Stock news analysis"
   },
   scales: {
     yAxes: [{

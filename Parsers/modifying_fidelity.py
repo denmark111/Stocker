@@ -6,7 +6,6 @@ import re
 datas = []
 output = [] # use for sort URL date
 result = [] # get article title URL in fidelity.com
-temp_result = [] # use for sort URL
 
 # Get href from each news list page
 class linkParser(HTMLParser):
@@ -40,7 +39,7 @@ class articleParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If start tag is neither 'p' nor 'div', skip to the next line
-        if tag != 'div'  or tag != 'chron':
+        if tag != 'div'  or tag != 'p':
             return
 
         # If start tag is 'p' or 'div', get attributes
@@ -55,7 +54,7 @@ class articleParser(HTMLParser):
         if 'class' in attr :
 
             # If attribute 'id' is either 'articleText' or 'articlebody'
-            if attr['class'] == 'scl-news-article--description ng-binding' or attr['class'] == 'news.text | to_trusted':
+            if attr['class'] == ' scl-news-article--description ng-binding' or attr['ng-bind-html'] == 'news.text | to_trusted':
                 self.inArticleDiv = True
 
             # If not, set useless flag to True
@@ -78,12 +77,12 @@ class articleParser(HTMLParser):
             self.inUselessDiv = False
 
         # If end tag is 'div' and is article div, finish searching for tag 'p'
-        elif tag == 'div' and self.inArticleDiv:
+        elif tag == 'p' and self.inArticleDiv:
             self.inArticleDiv = False
 
     # Read data wo/ any tags which is the actual article data needed
     def handle_data(self, data):
-        if self.recording and self.inArticleDiv:
+        if self.recording  and self.inArticleDiv:
             if not self.inUselessDiv:
                 datas.append(data)     
 
@@ -93,6 +92,7 @@ class getNewsArticle():
 
         # Currently not in use
         self.article = []
+        self.link = ''
 
     # This is internal function
     # Retrieve parsed data from the given link
@@ -137,7 +137,7 @@ class getNewsArticle():
         
         
         # Retrieve parsed data from the url
-        #self._getParsed(url)
+        self._getParsed(url)
 
         # Iterate each html line and get reference link
         # !! This is website specific !!
@@ -204,16 +204,11 @@ if __name__ in "__main__":
       stock_link2 =  '&navState=root%7Croot-' 
       stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
 
-      
-      #result.reverse()
-      #for i in range(0,len(result)):    
-      #    print(result[i])
-      #temp_result.clear()
+      temp_result = [] # use for sort URL
 
       # Declare crawler object to use
       parser = getNewsArticle()
 
-      # Iterator
       target=[]
       for pagenum in range(0,10):
           target.append(stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3)
@@ -224,11 +219,11 @@ if __name__ in "__main__":
       output.sort()
       
       #sort url in chronological order
-      result.clear() 
+      
       for i in range(0,len(output)) :
-          result.append(temp_result[int(output[i].split('=')[1])-1])
-      #for i in range(0,100):    
-      #    print(result[i])  
+          result[i]=temp_result[int(output[i].split('=')[1])-1]
+      for i in range(0,100):    
+        print(result[i])  
         # Run crawler
       while 1 <10 :  
           parser.extractArticle(result)

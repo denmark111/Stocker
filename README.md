@@ -30,6 +30,12 @@ Data visualization is performed with Charts.js & D3.js which is popular open sou
 
 To run this application on your own, you need to meet requirements shown below.  
 
+- **Linux**
+
+    Linux webserver is required to run web application.  
+    LAMP(Linux, Apache, MySQL, Python or PHP) is recommended.  
+    See installation process below.  
+
 - **Python 3**  
 
     Python 3 is required for web crawling.  
@@ -58,4 +64,16 @@ To run this application on your own, you need to meet requirements shown below.
     `$ pip install awscli`  
     `$ pip install boto3`
 
-3. TBD
+3. Set up linux server.  Here, we use Ubuntu 16.04 with LAMP installed.  
+    `$ sudo apt install apache2`  
+    `$ sudo apt install mysql-server`  
+
+    **This may vary depending on your choice**  
+    `$ sudo apt install php php-mysql`  
+    **or**  
+    install python3 on linux  
+
+4. Put Webpage in apache2 directory.  
+    `/var/www/html` is the default location for web files.  
+
+5. 

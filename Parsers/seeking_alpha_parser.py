@@ -94,7 +94,7 @@ class articleParser(HTMLParser):
 
 # Define crawler class
 # This class handles every parsing and crawling of a given news page link
-class getSeeking():
+class Seeking():
 
     def __init__(self):
         
@@ -190,7 +190,7 @@ class getSeeking():
             article = article.replace('\r', '')
 
             article = re.sub(' +', ' ', article)
-            print(article)
+            # print(article)
             self.result.append(article)
 
             del article
@@ -211,7 +211,7 @@ if __name__ in "__main__":
     stock_link = 'https://economictimes.indiatimes.com/topics_all.cms?type=article&query=' + stock_name + '&curpg='
 
     # Declare crawler object to use
-    parser = getSeeking()
+    parser = Seeking()
 
     # Iterator
     i = 1

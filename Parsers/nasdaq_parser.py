@@ -10,7 +10,6 @@ import re
 # Global variable for storing temporary parsed data
 datas = []
 
-
 # Get href from each news list page
 class linkParser(HTMLParser):
 
@@ -90,11 +89,12 @@ class articleParser(HTMLParser):
         if self.recording and self.inArticleDiv:
             if not self.inUselessDiv:
                 datas.append(data)
+                print(data)
 
 
 # Define crawler class
 # This class handles every parsing and crawling of a given news page link
-class getNasdaq():
+class Nasdaq():
 
     def __init__(self):
 
@@ -110,6 +110,15 @@ class getNasdaq():
     def _getParsed(self, url, isArticle=False):
 
         try:
+            # Create opener for fake user-agent
+            opener = urllib.request.build_opener()
+
+            # Add fake user-agent
+            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+
+            # Insert user-agent to opener
+            urllib.request.install_opener(opener)
+
             # Open url with urllib module
             f = urllib.request.urlopen(url)
             
@@ -199,10 +208,10 @@ if __name__ in "__main__":
     stock_link = 'https://www.nasdaq.com/symbol/' + stock_name + '/news-headlines?page='
     
     # Declare crawler object to use
-    parser = getNasdaq()
+    parser = Nasdaq()
 
     # Iterator
-    i = 1
+    i = 2
 
     while i < round_count:
 

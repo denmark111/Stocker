@@ -1,7 +1,7 @@
 import boto3
 import json
 
-class awsAccess():
+class AWSAccess():
 
     def __init__(self):
         self.comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')

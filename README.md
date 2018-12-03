@@ -3,7 +3,7 @@
 Stocker is a real time stock news analyzer with AWS Comprehend integrated.  
 It's purpose is to crawl stock info web pages and analyze various news article with machine learning.  
   
-<p align="right">
+<p align="center">
     <img src="Misc/Stocker_Diag.png" />
 </p>
 

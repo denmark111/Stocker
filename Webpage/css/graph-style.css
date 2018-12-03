@@ -1,0 +1,20 @@
+#container {
+    position: relative;
+    width: 100%;
+}
+
+#graph, #chart {
+    display: inline-block; 
+    *display: inline; zoom: 1; 
+    vertical-align: top;
+}
+
+#graph {
+    width: 50%;
+}
+
+#chart {
+    position: relative;
+    width: 50%;
+    float: right;
+}

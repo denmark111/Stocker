@@ -66,4 +66,5 @@ window.onload = function() {
     data: barChartData,
     options: chartOptions
   });
+  
 };

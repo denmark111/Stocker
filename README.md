@@ -2,6 +2,7 @@
 
 Stocker is a real time stock news analyzer with AWS Comprehend integrated.  
 It's purpose is to crawl stock info web pages and analyze various news article with machine learning.  
+![](./Misc/Stocker_Diag.png)
 
 ### Supported stock news website
 
@@ -76,4 +77,6 @@ To run this application on your own, you need to meet requirements shown below.
 4. Put Webpage in apache2 directory.  
     `/var/www/html` is the default location for web files.  
 
-5. 
+5. Register parsers in crontab.  This is not mandatory but preferred.  
+
+6. TBD  

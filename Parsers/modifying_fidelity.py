@@ -39,10 +39,11 @@ class articleParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If start tag is neither 'p' nor 'div', skip to the next line
-        if tag != 'div'  or tag != 'p':
+        if tag != 'div' and tag != 'script' :#and tag !='script':
             return
 
         # If start tag is 'p' or 'div', get attributes
+        #if tag == 'div' :# or tag =='p':
         attr = dict(attrs)
 
         # See if 'id' is in attribute
@@ -51,10 +52,11 @@ class articleParser(HTMLParser):
         # <div id="articleText"> <p>article</p> </div> or
         # <div id="articlebody"> <p>article</p> </div>
         # format to show articles.
-        if 'class' in attr :
+        if 'role' in attr :
 
             # If attribute 'id' is either 'articleText' or 'articlebody'
-            if attr['class'] == ' scl-news-article--description ng-binding' or attr['ng-bind-html'] == 'news.text | to_trusted':
+            if attr['role'] == 'main' : #//scl-news-article--description ng-binding
+                #if attr['ng-bind-html']=='news.text | to_trusted':
                 self.inArticleDiv = True
 
             # If not, set useless flag to True
@@ -69,7 +71,7 @@ class articleParser(HTMLParser):
     def handle_endtag(self, tag):
 
         # If end tag is 'p', finish reading
-        if tag == 'p' and self.recording:
+        if tag == 'div' and self.recording:
             self.recording = False
 
         # If end tag is 'div' and is useless div, finish skipping
@@ -77,12 +79,12 @@ class articleParser(HTMLParser):
             self.inUselessDiv = False
 
         # If end tag is 'div' and is article div, finish searching for tag 'p'
-        elif tag == 'p' and self.inArticleDiv:
+        elif tag == 'script' and self.inArticleDiv:
             self.inArticleDiv = False
 
     # Read data wo/ any tags which is the actual article data needed
     def handle_data(self, data):
-        if self.recording  and self.inArticleDiv:
+        if self.recording and self.inArticleDiv:
             if not self.inUselessDiv:
                 datas.append(data)     
 
@@ -189,10 +191,18 @@ class getNewsArticle():
             for d in datas:
                 article = article + d
 
-            article = article.replace('\n', '1')
-            article = article.replace('\r', '2')
+            article = article.replace('\n', '')
+            article = article.replace('\r', '')
+            article = article.replace('var articlejson = {"story":{', '')
+            #article = article.replace('.+"text":"', '')
+            #article = re.sub(':',' ', article)
+            #article = re.sub('<.+>',' ', article)
+            #article = re.sub('".+":"',' ', article)
 
             article = re.sub(' +', ' ', article)
+
+
+
             print(article)
 
             del article
@@ -222,9 +232,9 @@ if __name__ in "__main__":
       
       for i in range(0,len(output)) :
           result[i]=temp_result[int(output[i].split('=')[1])-1]
-          print(result[i])
-
+      for i in range(0,100):    
+        print(result[i])  
         # Run crawler
-      #while 1 <10 :  
-          #parser.extractArticle(result)
+      while 1 <10 :  
+          parser.extractArticle(result)
         #pagenum = pagenum + 1

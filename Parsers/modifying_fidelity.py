@@ -222,9 +222,9 @@ if __name__ in "__main__":
       
       for i in range(0,len(output)) :
           result[i]=temp_result[int(output[i].split('=')[1])-1]
-      for i in range(0,100):    
-        print(result[i])  
+          print(result[i])
+
         # Run crawler
-      while 1 <10 :  
-          parser.extractArticle(result)
+      #while 1 <10 :  
+          #parser.extractArticle(result)
         #pagenum = pagenum + 1

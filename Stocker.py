@@ -3,6 +3,7 @@
 from AWS.aws_access import AWSAccess
 from Parsers.seeking_alpha_parser import Seeking
 from Parsers.nasdaq_parser import Nasdaq
+import time
 
 
 def runCrawler(parser, url, pageCount):
@@ -21,6 +22,8 @@ def runCrawler(parser, url, pageCount):
 
     # Get news result
     result = parser.getResult()
+
+    print("result : {}".format(result))
 
     _printResult(result)
 
@@ -42,10 +45,10 @@ if __name__ in '__main__':
     pageCount = 3
 
     # Nasdaq page
-    # nasdaq = Nasdaq()
+    nasdaq = Nasdaq()
     stock_name = 'aapl'
     stock_link = 'https://www.nasdaq.com/symbol/' + stock_name + '/news-headlines?page='
-    # runCrawler(nasdaq, stock_link, pageCount)
+    runCrawler(nasdaq, stock_link, pageCount)
 
     # Seeking Alpha page
     # seeking = Seeking()

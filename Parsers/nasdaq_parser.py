@@ -6,6 +6,8 @@
 from html.parser import HTMLParser
 import urllib.request, urllib.error
 import re
+import pymysql
+import time
 
 # Global variable for storing temporary parsed data
 datas = []
@@ -99,7 +101,7 @@ class Nasdaq():
     def __init__(self):
 
         # Currently not in use
-        self.article = []
+        self.result = []
 
     # This is internal function
     # Retrieve parsed data from the given link
@@ -114,7 +116,7 @@ class Nasdaq():
             opener = urllib.request.build_opener()
 
             # Add fake user-agent
-            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+            opener.addheaders = [('User-agent', 'Chrome/70.0.3538.110')]
 
             # Insert user-agent to opener
             urllib.request.install_opener(opener)
@@ -128,6 +130,9 @@ class Nasdaq():
             # Decode with 'utf-8' character set
             source = html.decode('utf8')
             f.close()
+
+            time.sleep(5)
+
         # Basic error handling
         except urllib.error.HTTPError as e:
             print(e, 'while fetching', url)
@@ -191,8 +196,12 @@ class Nasdaq():
 
             article = re.sub(' +', ' ', article)
             print(article)
+            self.result.append(article)
 
             del article
+
+    def getResult(self):
+        return self.result
 
 
 # Main function calls crawler
@@ -202,7 +211,7 @@ if __name__ in "__main__":
     stock_name = 'aapl'
 
     # Number of pages to iterate
-    round_count = 10
+    round_count = 3
 
     # Actual link for the news
     stock_link = 'https://www.nasdaq.com/symbol/' + stock_name + '/news-headlines?page='

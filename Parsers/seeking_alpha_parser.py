@@ -6,8 +6,8 @@
 from html.parser import HTMLParser
 import urllib.request, urllib.error
 import re
-import boto3
-import json
+import pymysql
+import time
 
 # Global variable for storing temporary parsed data
 datas = []
@@ -128,6 +128,10 @@ class Seeking():
             # Decode with 'utf-8' character set
             source = html.decode('utf8')
             f.close()
+
+            time.sleep(5)
+
+
         # Basic error handling
         except urllib.error.HTTPError as e:
             print(e, 'while fetching', url)

@@ -1,72 +1,235 @@
 from html.parser import HTMLParser
 import urllib.request, urllib.error
-from queue import *
 import string
 import re
-from operator import itemgetter
-import operator
 
-links = []
-output = [] # use for sort URL date
-result = [] # get article title URL in fidelity.com
-temp_result = [] # use for sort URL
+datas = [] # Global variable for storing temporary parsed data
+output = [] # Global varialbe for sorting URL date
+result = [] # Global varialbe for getting URL in fidelity.com
+articleTitle = [] # Global varialbe for storing article title
+articleDate = [] # Global varialbe for storing article title
 
-class MyHTMLParser(HTMLParser): 
-  
-    def handle_starttag(self, tag, attrs): 
-        if tag != 'a': 
-            return 
-  
-        attr = dict(attrs) 
-        links.append(attr)
+# Get href from each news list page
+class linkParser(HTMLParser):
+
+    # Get start tag 'a' for href
+    def handle_starttag(self, tag, attrs):
+
+        # If not 'a' skip to the next page
+        if tag != 'a':
+            return
+
+        # If 'a', get tag attributes 
+        attr = dict(attrs)
+
+        # Add it to the global datas list
+        datas.append(attr)
+       
         
-def extract(url): 
 
-    try: 
-          f = urllib.request.urlopen(url) 
-          html = f.read()
-          source = html.decode('utf8') 
-          f.close()
-    except urllib.error.HTTPError as e: 
-          print(e, 'while fetching', url) 
-          return
 
-    parser = MyHTMLParser() 
-    parser.links = [] 
-    parser.feed(source) 
-      
-    for l in links: 
-        if 'target' in l and 'title' in l:  
-            if l['target'] == '_top': 
+class articleParser(HTMLParser):
+
+    # Initialize HTMLParser and flags
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.recording = False
+        self.inArticleDiv = False
+        self.inUselessDiv = False
+
+    # Get start tags
+    def handle_starttag(self, tag, attrs):
+
+        # If start tag is neither 'div' nor 'script', skip to the next line
+        if tag != 'div' and tag != 'script' :
+            return
+
+        # If start tag is 'div' or 'script', get attributes
+        attr = dict(attrs)
+
+        # See if 'role' is in attribute
+        # !! This is website specific !!
+        # www.fidelity.com uses 
+        # <div role="main"> <script> article </script> </div> 
+        # format to show articles.
+        if 'role' in attr :
+
+            # If attribute 'role' is either 'main'
+            if attr['role'] == 'main' : 
+                self.inArticleDiv = True
+
+            # If not, set useless flag to True
+            # This filters out useless <div>...</div>s between article div
+            else:
+                self.inUselessDiv = True
+
+        # Set flag to read sources
+        self.recording = True
+
+    # Get end tags
+    def handle_endtag(self, tag):
+
+        # If end tag is 'div', finish reading
+        if tag == 'div' and self.recording:
+            self.recording = False
+
+        # If end tag is 'div' and is useless div, finish skipping
+        elif tag == 'div' and self.inUselessDiv:
+            self.inUselessDiv = False
+
+        # If end tag is 'script' and is article div, finish searching for tag 'script'
+        elif tag == 'script' and self.inArticleDiv:
+            self.inArticleDiv = False
+
+    # Read data wo/ any tags which is the actual article data needed 
+    def handle_data(self, data): 
+        if self.recording and self.inArticleDiv: 
+            if not self.inUselessDiv: 
+                datas.append(data)     
+
+class getNewsArticle(): 
+
+    def __init__(self): 
+
+        # Currently not in use
+        self.article = [] 
+        self.link = ''
+
+    # This is internal function
+    # Retrieve parsed data from the given link
+    # Parameters:
+    # url => link to parse
+    # isArticle => False if getting 'href's from news list, 
+    # True if getting article data from the news page. 
+    def _getParsed(self, url, isArticle=False):
+
+        try:
+            # Open url with urllib module 
+            f = urllib.request.urlopen(url)
+            
+            # Read byte data
+            html = f.read()
+
+            # Decode with 'utf-8' character set
+            source = html.decode('utf8')
+            f.close()
+        # Basic error handling
+        except urllib.error.HTTPError as e:
+            print(e, 'while fetching', url)
+            return
+        except urllib.error.HTTPError as h:
+            print(h, 'while fetching', url)
+            return
+        # For crawling for links, use linkParser class
+        if not isArticle:
+            parser = linkParser()
+        
+        # For crawling article data, use articleParser class
+        else:
+            parser = articleParser()
+
+        # Feed data to the parser
+        parser.feed(source)
+
+    # This is internal function
+    def _getLinks(self, url):
+     
+        # Retrieve parsed data from the url
+        self._getParsed(url)
+
+        # Iterate each html line and get reference link
+        # !! This is website specific !!
+        for l in datas: 
+           if 'target' in l and 'title' in l:  
+             if l['target'] == '_top': 
+                 # Top list always contains trash link 
                 if l['href']!='https://www.fidelity.com/sector-investing/overview' : 
                    result.append(l['href']) 
-                   #output.append(l['href'].strip('https://www.fidelity.com/news/article/compony-news' + 'https://www.fidelity.com/news/article/default' + 'https://www.fidelity.com/news/article/us-markets' + 'https://www.fidelity.com/news/article/investing-ideas' + 'https://www.fidelity.com/news/article/mergers-and-quisition' + 'https://www.fidelity.com/news/article/technology'))
+                   #array, output store date sequence
                    output.append(l['href'].split('/')[6])
 
-    links.clear() 
+        # Clear datas list for later use
+        datas.clear()
 
-    return None 
+        # terminate this function
+        return None
+
+    # This function is called by the user
+    def extractArticle(self, url): 
+
+        for links in url:
+
+            article = '' 
+            temp_article=''
+
+            datas.clear()
+
+            self._getParsed(links, True)
+            
+            for d in datas:
+                article = article + str(d)
+            #Pasing the article gotten by crawler
+            if '"text":' not in article or 'This story has been deleted by the news provider.' in article:
+                return
+
+            article=article.split('"text":')[1]
+            article = article.replace('\r', ' ')
+            article = article.replace('\n', ' ')
+            article = article.replace('&quot;', ' ')
+            article = article.replace('&amp;', ' ')
+            temp=article.split('>')
+
+            for i in temp: 
+                temp_article = temp_article + i.split('<')[0]
+                    
+            article=temp_article 
+
+            article = re.sub('(END).*',' ', article)
+            article = re.sub(',"receivedTime".*',' ', article)
+            article = re.sub('","service".*',' ', article)
+            article = re.sub('\\n\\n.*',' ', article)
+            article = re.sub(';\s\d\d\d-\d\d\d-\d\d\d\d.*',' ', article)
+            article = re.sub('\\n\\n\\n\\n.*',' ', article)
+            article = re.sub('\(Reporting by.*',' ', article)
+            article = re.sub('\"',' ', article)
+            article = article.replace('\\n', '')
+                
+            article = re.sub(' +', ' ', article) 
+
+            print(article)
+
+            del article
 
 if __name__ in "__main__": 
   
-      stock_name = 'amzn' 
-      pagenum = 0 
+      stock_name = input()
       stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected=' 
       stock_link2 =  '&navState=root%7Croot-' 
       stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
 
-  
-      for pagenum in range(0, 10): 
-          target = stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3 
-            
-          extract(target) 
-      # temp_result = result       
+      temp_result = [] # use for sort URL
+
+      # Declare crawler object to use
+      parser = getNewsArticle()
+
+      target=[]
+      for pagenum in range(0,10):
+          target.append(stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3)
+          parser._getLinks(target[pagenum])
+        # Insert page number to the link
       temp_result = result.copy()
-      #sort url date
+      #sort url in chronological order ////////
       output.sort()
-      #sort url in chronological order 
+      
+      
       for i in range(0,len(output)) :
           result[i]=temp_result[int(output[i].split('=')[1])-1]
-          
-      for i in range(0,100):    
-          print(result[i])
+      #sort url in chronological order ////////
+
+      for i in range(0,len(result)):    
+        print(result[i])
+        
+        # Run crawler
+      while 1 <10 :  
+          parser.extractArticle(result)
+        #pagenum = pagenum + 1

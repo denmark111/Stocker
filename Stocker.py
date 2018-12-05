@@ -48,7 +48,7 @@ if __name__ in '__main__':
     # runCrawler(nasdaq, stock_link, pageCount)
 
     # Seeking Alpha page
-    seeking = Seeking()
+    # seeking = Seeking()
     stock_name = 'apple'
     stock_link = 'https://economictimes.indiatimes.com/topics_all.cms?type=article&query=' + stock_name + '&curpg='
-    runCrawler(seeking, stock_link, pageCount)
+    # runCrawler(seeking, stock_link, pageCount)

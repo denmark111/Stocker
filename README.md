@@ -63,7 +63,7 @@ To run this application on your own, you need to meet requirements shown below.
 - **Python 3**  
 
     Python 3 is required for web crawling.  
-    built-in `html.Parser` library is used to parse html code.
+    built-in `html.Parser` library is used to parse html code.(Python 3.5.2)
 
 - **AWS Account**
 

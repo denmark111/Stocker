@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 import urllib.request, urllib.error
 import string
 import re
+import time
 
 datas = [] # Global variable for storing temporary parsed data
 output = [] # Global varialbe for sorting URL date
@@ -113,6 +114,9 @@ class getNewsArticle():
             # Decode with 'utf-8' character set
             source = html.decode('utf8')
             f.close()
+
+            # Time delay for crawler anti-block
+            time.sleep(3)
         # Basic error handling
         except urllib.error.HTTPError as e:
             print(e, 'while fetching', url)

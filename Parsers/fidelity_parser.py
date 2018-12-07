@@ -8,6 +8,7 @@ output = [] # Global varialbe for sorting URL date
 result = [] # Global varialbe for getting URL in fidelity.com
 articleTitle = [] # Global varialbe for storing article title
 articleDate = [] # Global varialbe for storing article title
+articleContent = [] # Global varialbe for storing article content
 
 # Get href from each news list page
 class linkParser(HTMLParser):
@@ -25,9 +26,6 @@ class linkParser(HTMLParser):
         # Add it to the global datas list
         datas.append(attr)
        
-        
-
-
 class articleParser(HTMLParser):
 
     # Initialize HTMLParser and flags
@@ -147,6 +145,7 @@ class getNewsArticle():
                    result.append(l['href']) 
                    #array, output store date sequence
                    output.append(l['href'].split('/')[6])
+                   articleTitle.append(l['title'])
 
         # Clear datas list for later use
         datas.clear()
@@ -169,8 +168,11 @@ class getNewsArticle():
             for d in datas:
                 article = article + str(d)
             #Pasing the article gotten by crawler
-            if '"text":' not in article or 'This story has been deleted by the news provider.' in article:
+            if '"text":' not in article :
                 return
+
+            if 'This story has been deleted by the news provider.' in article:
+                article = '"text":>it is a unnecessary article.<'
 
             article=article.split('"text":')[1]
             article = article.replace('\r', ' ')
@@ -194,11 +196,24 @@ class getNewsArticle():
             article = re.sub('\"',' ', article)
             article = article.replace('\\n', '')
                 
-            article = re.sub(' +', ' ', article) 
-
+            article = re.sub(' +', ' ', article)  
+            articleContent.append(article) 
             print(article)
 
             del article
+
+#Re-extract clean data
+def get_article_info():
+    #Get num of index, each content
+    for i,x in enumerate(articleContent,0):
+        #If parsed article is unnecessary, it is deleted in each list 
+        if 'it is a unnecessary article.' in x:
+            del articleContent[i]
+            del output[i]
+            del articleTitle[i]
+            del articleDate[i]
+            del result[i]
+    return None
 
 if __name__ in "__main__": 
   
@@ -207,7 +222,10 @@ if __name__ in "__main__":
       stock_link2 =  '&navState=root%7Croot-' 
       stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
 
-      temp_result = [] # use for sort URL
+      # Use for sort URL
+      temp_result = []
+      # Use for sort article title
+      temp_article = [] 
 
       # Declare crawler object to use
       parser = getNewsArticle()
@@ -216,20 +234,27 @@ if __name__ in "__main__":
       for pagenum in range(0,10):
           target.append(stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3)
           parser._getLinks(target[pagenum])
-        # Insert page number to the link
+      # Insert page number to the link
       temp_result = result.copy()
-      #sort url in chronological order ////////
+      # Copy article titile for sorting
+      temp_article = articleTitle.copy()
+
+      #sort url, title in chronological order ////////
       output.sort()
-      
+      for i in output :
+          articleDate.append(i[0:8])
       
       for i in range(0,len(output)) :
           result[i]=temp_result[int(output[i].split('=')[1])-1]
-      #sort url in chronological order ////////
+          articleTitle[i]=temp_article[int(output[i].split('=')[1])-1]
+      #sort url, title in chronological order ////////
 
-      for i in range(0,len(result)):    
-        print(result[i])
-        
-        # Run crawler
+
+      print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))
+      
+      # Run crawler
       while 1 <10 :  
           parser.extractArticle(result)
-        #pagenum = pagenum + 1
+
+      #re-extract clean data
+      get_article_info()

@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from html.parser import HTMLParser
 import urllib.request, urllib.error
 import string
@@ -200,6 +202,9 @@ class getNewsArticle():
             articleContent.append(article) 
             print(article)
 
+            if len(articleContent) == len(result) :
+               return
+
             del article
 
 #Re-extract clean data
@@ -213,6 +218,7 @@ def get_article_info():
             del articleTitle[i]
             del articleDate[i]
             del result[i]
+    
     return None
 
 if __name__ in "__main__": 
@@ -250,11 +256,14 @@ if __name__ in "__main__":
       #sort url, title in chronological order ////////
 
 
-      print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))
+      #print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))
       
       # Run crawler
+      
       while 1 <10 :  
           parser.extractArticle(result)
-
+          if len(articleContent) == len(result) :
+              break
       #re-extract clean data
       get_article_info()
+      #print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))

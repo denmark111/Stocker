@@ -213,7 +213,7 @@ class Fidelity():
 
             article = re.sub(' +', ' ', article)
             articleContent.append(article)
-            print(article)
+            # print(article)
             final_art.append(article)
 
             if len(articleContent) == len(result):
@@ -237,25 +237,39 @@ def get_article_info():
             del articleDate[i]
             del result[i]
 
-def getAwsResult():
+def getAwsResult(stock_name):
     aws = AWSAccess()
 
-    # Under construction
+    sentiment = []
+    keywords = []
+
+    for elem in articleContent:
+        sentiment.append(aws.getSentimentResult(elem))
+        keywords.append(aws.getKeywordResult(elem))
 
     # Join Database
     conn = pymysql.connect( 
-        host='localhost', 
-        user='root',
-        password='12341234', 
+        host='210.117.181.240', 
+        user='home_user',
+        password='qaz1234', 
         db='STOCKER', 
         charset='utf8mb4',
         autocommit=True)
     # Declare cursor for use query  
     cursor=conn.cursor()
     # Insert article datas into the table
-    sql = 'INSERT INTO fidelity (title, date, content, url) VALUES (%s, %s, %s, %s)'
+    sql = 'INSERT INTO fidelity (stockName, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s)'
     for i in range(0,len(output)):
-          cursor.execute(sql,(articleTitle[i], articleDate[i], articleContent[i], result[i]))
+
+        for elem in keywords:
+            for words in elem['keyPhrases']:
+                words_string += (words['Text'] + ' ')
+        
+        cursor.execute(sql,(stock_name, words_string, sentiment[i]['SentimentScore']['Positive'],
+            sentiment[i]['SentimentScore']['Negative'],
+            sentiment[i]['SentimentScore']['Mixed'],
+            sentiment[i]['SentimentScore']['Neutral']))
+        words_string = ''
     # Quit connection program and database
     conn.close()
 
@@ -279,7 +293,7 @@ if __name__ in "__main__":
     aws = AWSAccess()
 
     target = []
-    for pagenum in range(0, 2):
+    for pagenum in range(0, 1):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
         parser._getLinks(target[pagenum])
@@ -306,22 +320,4 @@ if __name__ in "__main__":
     # re-extract clean data
     get_article_info()
 
-
-
-    # Join Database
-    conn = pymysql.connect( 
-        host='localhost', 
-        user='root',
-        password='12341234', 
-        db='STOCKER', 
-        charset='utf8mb4',
-        autocommit=True)
-    # Declare cursor for use query  
-    cursor=conn.cursor()
-    # Insert article datas into the table
-    sql = 'INSERT INTO fidelity (title, date, content, url) VALUES (%s, %s, %s, %s)'
-    for i in range(0,len(output)):
-          cursor.execute(sql,(articleTitle[i], articleDate[i], articleContent[i], result[i]))
-    # Quit connection program and database
-    conn.close()
-    
+    getAwsResult(stock_name)

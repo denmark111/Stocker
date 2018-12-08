@@ -1,19 +1,23 @@
 #!/usr/bin/python3
 
 from html.parser import HTMLParser
-import urllib.request, urllib.error
+from AWS.aws_access import AWSAccess
+import urllib.request
+import urllib.error
 import string
 import re
 import time
 
-datas = [] # Global variable for storing temporary parsed data
-output = [] # Global varialbe for sorting URL date
-result = [] # Global varialbe for getting URL in fidelity.com
-articleTitle = [] # Global varialbe for storing article title
-articleDate = [] # Global varialbe for storing article title
-articleContent = [] # Global varialbe for storing article content
+datas = []  # Global variable for storing temporary parsed data
+output = []  # Global varialbe for sorting URL date
+result = []  # Global varialbe for getting URL in fidelity.com
+articleTitle = []  # Global varialbe for storing article title
+articleDate = []  # Global varialbe for storing article title
+articleContent = []  # Global varialbe for storing article content
 
 # Get href from each news list page
+
+
 class linkParser(HTMLParser):
 
     # Get start tag 'a' for href
@@ -23,12 +27,13 @@ class linkParser(HTMLParser):
         if tag != 'a':
             return
 
-        # If 'a', get tag attributes 
+        # If 'a', get tag attributes
         attr = dict(attrs)
 
         # Add it to the global datas list
         datas.append(attr)
-       
+
+
 class articleParser(HTMLParser):
 
     # Initialize HTMLParser and flags
@@ -42,7 +47,7 @@ class articleParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If start tag is neither 'div' nor 'script', skip to the next line
-        if tag != 'div' and tag != 'script' :
+        if tag != 'div' and tag != 'script':
             return
 
         # If start tag is 'div' or 'script', get attributes
@@ -50,13 +55,13 @@ class articleParser(HTMLParser):
 
         # See if 'role' is in attribute
         # !! This is website specific !!
-        # www.fidelity.com uses 
-        # <div role="main"> <script> article </script> </div> 
+        # www.fidelity.com uses
+        # <div role="main"> <script> article </script> </div>
         # format to show articles.
-        if 'role' in attr :
+        if 'role' in attr:
 
             # If attribute 'role' is either 'main'
-            if attr['role'] == 'main' : 
+            if attr['role'] == 'main':
                 self.inArticleDiv = True
 
             # If not, set useless flag to True
@@ -82,32 +87,33 @@ class articleParser(HTMLParser):
         elif tag == 'script' and self.inArticleDiv:
             self.inArticleDiv = False
 
-    # Read data wo/ any tags which is the actual article data needed 
-    def handle_data(self, data): 
-        if self.recording and self.inArticleDiv: 
-            if not self.inUselessDiv: 
-                datas.append(data)     
+    # Read data wo/ any tags which is the actual article data needed
+    def handle_data(self, data):
+        if self.recording and self.inArticleDiv:
+            if not self.inUselessDiv:
+                datas.append(data)
 
-class getNewsArticle(): 
 
-    def __init__(self): 
+class Fidelity():
+
+    def __init__(self):
 
         # Currently not in use
-        self.article = [] 
+        self.article = []
         self.link = ''
 
     # This is internal function
     # Retrieve parsed data from the given link
     # Parameters:
     # url => link to parse
-    # isArticle => False if getting 'href's from news list, 
-    # True if getting article data from the news page. 
+    # isArticle => False if getting 'href's from news list,
+    # True if getting article data from the news page.
     def _getParsed(self, url, isArticle=False):
 
         try:
-            # Open url with urllib module 
+            # Open url with urllib module
             f = urllib.request.urlopen(url)
-            
+
             # Read byte data
             html = f.read()
 
@@ -127,7 +133,7 @@ class getNewsArticle():
         # For crawling for links, use linkParser class
         if not isArticle:
             parser = linkParser()
-        
+
         # For crawling article data, use articleParser class
         else:
             parser = articleParser()
@@ -137,21 +143,21 @@ class getNewsArticle():
 
     # This is internal function
     def _getLinks(self, url):
-     
+
         # Retrieve parsed data from the url
         self._getParsed(url)
 
         # Iterate each html line and get reference link
         # !! This is website specific !!
-        for l in datas: 
-           if 'target' in l and 'title' in l:  
-             if l['target'] == '_top': 
-                 # Top list always contains trash link 
-                if l['href']!='https://www.fidelity.com/sector-investing/overview' : 
-                   result.append(l['href']) 
-                   #array, output store date sequence
-                   output.append(l['href'].split('/')[6])
-                   articleTitle.append(l['title'])
+        for l in datas:
+            if 'target' in l and 'title' in l:
+                if l['target'] == '_top':
+                    # Top list always contains trash link
+                    if l['href'] != 'https://www.fidelity.com/sector-investing/overview':
+                        result.append(l['href'])
+                        # array, output store date sequence
+                        output.append(l['href'].split('/')[6])
+                        articleTitle.append(l['title'])
 
         # Clear datas list for later use
         datas.clear()
@@ -160,114 +166,122 @@ class getNewsArticle():
         return None
 
     # This function is called by the user
-    def extractArticle(self, url): 
+    def extractArticle(self, url):
+
+        final_art = []
 
         for links in url:
 
-            article = '' 
-            temp_article=''
+            article = ''
+            temp_article = ''
 
             datas.clear()
 
             self._getParsed(links, True)
-            
+
             for d in datas:
                 article = article + str(d)
-            #Pasing the article gotten by crawler
-            if '"text":' not in article :
+            # Pasing the article gotten by crawler
+            if '"text":' not in article:
                 return
 
             if 'This story has been deleted by the news provider.' in article:
                 article = '"text":>it is a unnecessary article.<'
 
-            article=article.split('"text":')[1]
+            article = article.split('"text":')[1]
             article = article.replace('\r', ' ')
             article = article.replace('\n', ' ')
             article = article.replace('&quot;', ' ')
             article = article.replace('&amp;', ' ')
-            temp=article.split('>')
+            temp = article.split('>')
 
-            for i in temp: 
+            for i in temp:
                 temp_article = temp_article + i.split('<')[0]
-                    
-            article=temp_article 
 
-            article = re.sub('(END).*',' ', article)
-            article = re.sub(',"receivedTime".*',' ', article)
-            article = re.sub('","service".*',' ', article)
-            article = re.sub('\\n\\n.*',' ', article)
-            article = re.sub(';\s\d\d\d-\d\d\d-\d\d\d\d.*',' ', article)
-            article = re.sub('\\n\\n\\n\\n.*',' ', article)
-            article = re.sub('\(Reporting by.*',' ', article)
-            article = re.sub('\"',' ', article)
+            article = temp_article
+
+            article = re.sub('(END).*', ' ', article)
+            article = re.sub(',"receivedTime".*', ' ', article)
+            article = re.sub('","service".*', ' ', article)
+            article = re.sub('\\n\\n.*', ' ', article)
+            article = re.sub(';\s\d\d\d-\d\d\d-\d\d\d\d.*', ' ', article)
+            article = re.sub('\\n\\n\\n\\n.*', ' ', article)
+            article = re.sub('\(Reporting by.*', ' ', article)
+            article = re.sub('\"', ' ', article)
             article = article.replace('\\n', '')
-                
-            article = re.sub(' +', ' ', article)  
-            articleContent.append(article) 
-            print(article)
 
-            if len(articleContent) == len(result) :
-               return
+            article = re.sub(' +', ' ', article)
+            articleContent.append(article)
+            print(article)
+            final_art.append(article)
+
+            if len(articleContent) == len(result):
+                return
 
             del article
 
-#Re-extract clean data
+        return final_art
+
+# Re-extract clean data
+
+
 def get_article_info():
-    #Get num of index, each content
-    for i,x in enumerate(articleContent,0):
-        #If parsed article is unnecessary, it is deleted in each list 
+    # Get num of index, each content
+    for i, x in enumerate(articleContent, 0):
+        # If parsed article is unnecessary, it is deleted in each list
         if 'it is a unnecessary article.' in x:
             del articleContent[i]
             del output[i]
             del articleTitle[i]
             del articleDate[i]
             del result[i]
+
+
+if __name__ in "__main__":
+
+    stock_name = input()
+    stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + \
+        stock_name + '&originatingpage=NSRP&NSRPpageSelected='
+    stock_link2 = '&navState=root%7Croot-'
+    stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle'
+
+    # Use for sort URL
+    temp_result = []
+    # Use for sort article title
+    temp_article = []
+
+    # Declare crawler object to use
+    parser = Fidelity()
+
+    # Declare AWS access object
+    aws = AWSAccess()
+
+    target = []
+    for pagenum in range(0, 2):
+        target.append(stock_link1 + str(pagenum+1) +
+                      stock_link2 + str(pagenum*10) + stock_link3)
+        parser._getLinks(target[pagenum])
+    # Insert page number to the link
+    temp_result = result.copy()
+    # Copy article titile for sorting
+    temp_article = articleTitle.copy()
+
+    # sort url, title in chronological order ////////
+    output.sort()
+    for i in output:
+        articleDate.append(i[0:8])
+
+    for i in range(0, len(output)):
+        result[i] = temp_result[int(output[i].split('=')[1])-1]
+        articleTitle[i] = temp_article[int(output[i].split('=')[1])-1]
+    # sort url, title in chronological order ////////
+
+    # Run crawler
+    while True:
+        parser.extractArticle(result)
+        if len(articleContent) == len(result):
+            break
+    # re-extract clean data
+    get_article_info()
+
     
-    return None
-
-if __name__ in "__main__": 
-  
-      stock_name = input()
-      stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + stock_name + '&originatingpage=NSRP&NSRPpageSelected=' 
-      stock_link2 =  '&navState=root%7Croot-' 
-      stock_link3 = '-10%7C0&binningState=&sortBy=&sourceBoxState=&bundleName=news-bundle' 
-
-      # Use for sort URL
-      temp_result = []
-      # Use for sort article title
-      temp_article = [] 
-
-      # Declare crawler object to use
-      parser = getNewsArticle()
-
-      target=[]
-      for pagenum in range(0,10):
-          target.append(stock_link1 + str(pagenum+1)+ stock_link2 + str(pagenum*10) + stock_link3)
-          parser._getLinks(target[pagenum])
-      # Insert page number to the link
-      temp_result = result.copy()
-      # Copy article titile for sorting
-      temp_article = articleTitle.copy()
-
-      #sort url, title in chronological order ////////
-      output.sort()
-      for i in output :
-          articleDate.append(i[0:8])
-      
-      for i in range(0,len(output)) :
-          result[i]=temp_result[int(output[i].split('=')[1])-1]
-          articleTitle[i]=temp_article[int(output[i].split('=')[1])-1]
-      #sort url, title in chronological order ////////
-
-
-      #print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))
-      
-      # Run crawler
-      
-      while 1 <10 :  
-          parser.extractArticle(result)
-          if len(articleContent) == len(result) :
-              break
-      #re-extract clean data
-      get_article_info()
-      #print(len(result),len(output),len(articleTitle),len(articleDate),len(articleContent))

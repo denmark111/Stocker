@@ -13,7 +13,7 @@ sql = '''
             CREATE TABLE seeking (
                 title varchar(255) NOT NULL PRIMARY KEY,
                 date varchar(255) NOT NULL,
-                content varchar(255) NOT NULL,
+                content text(65535) NOT NULL,
                 url varchar(255) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''
@@ -21,7 +21,7 @@ sql2='''
             CREATE TABLE nasdaq (
                 title varchar(255) NOT NULL PRIMARY KEY,
                 date varchar(255) NOT NULL,
-                content varchar(255) NOT NULL,
+                content text(65535) NOT NULL,
                 url varchar(255) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''
@@ -29,7 +29,7 @@ sql3='''
             CREATE TABLE fidelity (
                 title varchar(255) NOT NULL PRIMARY KEY,
                 date varchar(255) NOT NULL,
-                content varchar(255) NOT NULL,
+                content text(65535) NOT NULL,
                 url varchar(255) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''

@@ -285,18 +285,20 @@ if __name__ in "__main__":
     # re-extract clean data
     get_article_info()
 
-    conn = pymysql.connect(
-        host='localhost',
+    # Join Database
+    conn = pymysql.connect( 
+        host='localhost', 
         user='root',
-        password='12341234',
-        db='STOCKER',
+        password='12341234', 
+        db='STOCKER', 
         charset='utf8mb4',
         autocommit=True)
- 
+    # Declare cursor for use query  
     cursor=conn.cursor()
-    sql = 'INSERT INTO seeking (title, date, content, url) VALUES (%s, %s, %s, %s)'
+    # Insert article datas into the table
+    sql = 'INSERT INTO fidelity (title, date, content, url) VALUES (%s, %s, %s, %s)'
     for i in range(0,len(output)):
           cursor.execute(sql,(articleTitle[i], articleDate[i], articleContent[i], result[i]))
-
+    # Quit connection program and database
     conn.close()
     

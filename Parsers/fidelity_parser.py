@@ -7,6 +7,7 @@ import urllib.error
 import string
 import re
 import time
+import pymysql.cursors
 
 datas = []  # Global variable for storing temporary parsed data
 output = []  # Global varialbe for sorting URL date
@@ -284,4 +285,18 @@ if __name__ in "__main__":
     # re-extract clean data
     get_article_info()
 
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='12341234',
+        db='STOCKER',
+        charset='utf8mb4',
+        autocommit=True)
+ 
+    cursor=conn.cursor()
+    sql = 'INSERT INTO seeking (title, date, content, url) VALUES (%s, %s, %s, %s)'
+    for i in range(0,len(output)):
+          cursor.execute(sql,(articleTitle[i], articleDate[i], articleContent[i], result[i]))
+
+    conn.close()
     

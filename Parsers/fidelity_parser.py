@@ -237,6 +237,27 @@ def get_article_info():
             del articleDate[i]
             del result[i]
 
+def getAwsResult():
+    aws = AWSAccess()
+
+    # Under construction
+
+    # Join Database
+    conn = pymysql.connect( 
+        host='localhost', 
+        user='root',
+        password='12341234', 
+        db='STOCKER', 
+        charset='utf8mb4',
+        autocommit=True)
+    # Declare cursor for use query  
+    cursor=conn.cursor()
+    # Insert article datas into the table
+    sql = 'INSERT INTO fidelity (title, date, content, url) VALUES (%s, %s, %s, %s)'
+    for i in range(0,len(output)):
+          cursor.execute(sql,(articleTitle[i], articleDate[i], articleContent[i], result[i]))
+    # Quit connection program and database
+    conn.close()
 
 if __name__ in "__main__":
 
@@ -284,6 +305,8 @@ if __name__ in "__main__":
             break
     # re-extract clean data
     get_article_info()
+
+
 
     # Join Database
     conn = pymysql.connect( 

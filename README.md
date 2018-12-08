@@ -62,8 +62,8 @@ To run this application on your own, you need to meet requirements shown below.
 
 - **Python 3**  
 
-    Python 3 is required for web crawling.  
-    built-in `html.Parser` library is used to parse html code.(Python 3.5.2)
+    Python 3(Python 3.5.2) is required for web crawling.  
+    built-in `html.Parser` library is used to parse html code.
 
 - **AWS Account**
 
@@ -79,6 +79,10 @@ To run this application on your own, you need to meet requirements shown below.
 - **Apache web server**
 
     Required to actually run the application.  
+    
+- **MySQL**
+    
+    Store data processed by AWS service using MySQL
 
 ### Installation
 
@@ -90,7 +94,8 @@ To run this application on your own, you need to meet requirements shown below.
 
 3. Set up linux server.  Here, we use Ubuntu 16.04 with LAMP installed.  
     `$ sudo apt install apache2`  
-    `$ sudo apt install mysql-server`  
+    `$ sudo apt install mysql-server` (Install the module for using >>> import pymysql )
+      **or** pip install PyMySQL (You must install pip before you can implement pip. sudo apt install python-pip)
 
     **This may vary depending on your choice**  
     `$ sudo apt install php php-mysql`  

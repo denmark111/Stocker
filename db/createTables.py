@@ -12,35 +12,35 @@ conn = pymysql.connect(
 cursor=conn.cursor()
 sql = '''
             CREATE TABLE seeking (
-                url varchar(255) NOT NULL PRIMARY KEY,
-                stock varchar(255) NOT NULL,
-                positive varchar(255),
-                negative varchar(255),
-                mixed varchar(255),
-                neutral varchar(255),
-                keyword varchar(255)
+                articleUrl VARCHAR(600) NOT NULL PRIMARY KEY,
+	            stockName VARCHAR(10) NULL DEFAULT NULL,
+            	keyWords MEDIUMTEXT NULL,
+            	positiveRate FLOAT NULL DEFAULT NULL,
+            	negativeRate FLOAT NULL DEFAULT NULL,
+            	mixedRate FLOAT NULL DEFAULT NULL,
+	            neutralRate FLOAT NULL DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''
 sql2='''
             CREATE TABLE nasdaq (
-                url varchar(255) NOT NULL PRIMARY KEY,
-                stock varchar(255) NOT NULL,
-                positive varchar(255),
-                negative varchar(255),
-                mixed varchar(255),
-                neutral varchar(255),
-                keyword varchar(255)
+                articleUrl VARCHAR(600) NOT NULL PRIMARY KEY,
+	            stockName VARCHAR(10) NULL DEFAULT NULL,
+            	keyWords MEDIUMTEXT NULL,
+            	positiveRate FLOAT NULL DEFAULT NULL,
+            	negativeRate FLOAT NULL DEFAULT NULL,
+            	mixedRate FLOAT NULL DEFAULT NULL,
+	            neutralRate FLOAT NULL DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''
 sql3='''
             CREATE TABLE fidelity (
-                title varchar(255) NOT NULL PRIMARY KEY,
-                stock varchar(255) NOT NULL,
-                positive varchar(255),
-                negative varchar(255),
-                mixed varchar(255),
-                neutral varchar(255),
-                keyword varchar(255)
+                articleTime varchar(50) NOT NULL PRIMARY KEY,
+	            stockName varchar(10) NOT NULL,
+	            keyWords mediumtext NULL DEFAULT NULL,
+                positiveRate float NULL DEFAULT NULL,
+                negativeRate float NULL DEFAULT NULL,
+                mixedRate float NULL DEFAULT NULL,
+                neutralRate float NULL DEFAULT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 '''
 cursor.execute(sql)

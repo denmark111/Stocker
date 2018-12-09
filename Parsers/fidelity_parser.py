@@ -294,6 +294,29 @@ def getAwsResult(stock_name):
 
     conn.close()
 
+def compareDups(currentTime):
+    # Join Database
+    conn = pymysql.connect( 
+        host='210.117.181.240', 
+        user='home_user',
+        password='qaz1234', 
+        db='STOCKER', 
+        charset='utf8mb4',
+        autocommit=True)
+    # Declare cursor for use query  
+    cursor=conn.cursor()
+
+    sql = 'SELECT COUNT(articleTime) FROM fidelity WHERE articleTime = ' + currentTime
+
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+
+    conn.close()
+
+    return result
+
+
 if __name__ in "__main__":
 
     stock_name = input()

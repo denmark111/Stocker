@@ -1,16 +1,35 @@
+#!/usr/bin/python3
+
 # www.nasdaq.com
 # Currently only for AAPL
 # Search through pre-defined pages of news
 # Get all href links of news and extract news article
 
 from html.parser import HTMLParser
-import urllib.request, urllib.error
+import urllib.request
+import urllib.error
+import string
 import re
-import pymysql
 import time
+import boto3
+import json
+import pymysql.cursors
 
 # Global variable for storing temporary parsed data
 datas = []
+# Global varialbe for storing url imported 
+article_url = []
+
+class AWSAccess():
+
+    def __init__(self):
+        self.comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')
+
+    def getSentimentResult(self, text):
+        return self.comprehend.detect_sentiment(Text=text, LanguageCode='en')
+
+    def getKeywordResult(self, text):
+        return self.comprehend.detect_key_phrases(Text=text, LanguageCode='en')
 
 # Get href from each news list page
 class linkParser(HTMLParser):
@@ -164,7 +183,7 @@ class Nasdaq():
             if 'target' in l:
                 if l['target'] == '_self':
                     result.append(l['href'])
-
+                    article_url.append(l['href'])
         # Top list always contains trash link
         # !! This is website specific !!
         del result[0]
@@ -203,12 +222,55 @@ class Nasdaq():
     def getResult(self):
         return self.result
 
+def getAwsResult(stock_name):
+    aws = AWSAccess()
+
+    sentiment = []
+    keywords = []
+    keyword_trimmed = []
+    words_string = ''
+
+    for elem in articleContent:
+        sentiment.append(aws.getSentimentResult(elem))
+        keywords.append(aws.getKeywordResult(elem))
+
+    for elem in keywords:
+        
+        for words in elem['KeyPhrases']:
+            words_string += (words['Text'] + ' ')
+        
+        keyword_trimmed.append(words_string)
+        print(words_string)
+        words_string = ''
+
+    # Join Database
+    conn = pymysql.connect( 
+        host='210.117.181.240', 
+        user='home_user',
+        password='qaz1234', 
+        db='STOCKER', 
+        charset='utf8mb4',
+        autocommit=True)
+    # Declare cursor for use query  
+    cursor=conn.cursor()
+    # Insert article datas into the table
+    sql = 'INSERT INTO nasdaq (articleUrl, stockName, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+
+    for i in range(len(articleContent)):
+        cursor.execute(sql,(article_url, stock_name, keyword_trimmed[i],
+            sentiment[i]['SentimentScore']['Positive'],
+            sentiment[i]['SentimentScore']['Negative'],
+            sentiment[i]['SentimentScore']['Mixed'],
+            sentiment[i]['SentimentScore']['Neutral']))
+
+    conn.close()
+
 
 # Main function calls crawler
 if __name__ in "__main__":
 
     # Define stock name - Due to change later
-    stock_name = 'aapl'
+    stock_name = input()
 
     # Number of pages to iterate
     round_count = 3
@@ -229,3 +291,7 @@ if __name__ in "__main__":
 
         # Run crawler
         parser.extractArticle(target)
+
+    getAwsResult(stock_name)
+
+    print("Success")

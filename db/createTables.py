@@ -12,7 +12,7 @@ conn = pymysql.connect(
 cursor=conn.cursor()
 sql = '''
             CREATE TABLE seeking (
-                title varchar(255) NOT NULL PRIMARY KEY,
+                url varchar(255) NOT NULL PRIMARY KEY,
                 stock varchar(255) NOT NULL,
                 positive varchar(255),
                 negative varchar(255),
@@ -23,7 +23,7 @@ sql = '''
 '''
 sql2='''
             CREATE TABLE nasdaq (
-                title varchar(255) NOT NULL PRIMARY KEY,
+                url varchar(255) NOT NULL PRIMARY KEY,
                 stock varchar(255) NOT NULL,
                 positive varchar(255),
                 negative varchar(255),

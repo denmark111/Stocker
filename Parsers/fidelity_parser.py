@@ -17,8 +17,6 @@ articleTitle = []  # Global varialbe for storing article title
 articleDate = []  # Global varialbe for storing article title
 articleContent = []  # Global varialbe for storing article content
 
-# Get href from each news list page
-
 
 class AWSAccess():
 
@@ -32,7 +30,7 @@ class AWSAccess():
         return self.comprehend.detect_key_phrases(Text=text, LanguageCode='en')
 
 
-
+# Get href from each news list page
 class linkParser(HTMLParser):
 
     # Get start tag 'a' for href
@@ -238,8 +236,6 @@ class Fidelity():
         return final_art
 
 # Re-extract clean data
-
-
 def get_article_info():
     # Get num of index, each content
     for i, x in enumerate(articleContent, 0):

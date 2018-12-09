@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
 from html.parser import HTMLParser
-from AWS.aws_access import AWSAccess
 import urllib.request
 import urllib.error
 import string
 import re
 import time
+import boto3
+import json
 import pymysql.cursors
 
 datas = []  # Global variable for storing temporary parsed data
@@ -17,6 +18,19 @@ articleDate = []  # Global varialbe for storing article title
 articleContent = []  # Global varialbe for storing article content
 
 # Get href from each news list page
+
+
+class AWSAccess():
+
+    def __init__(self):
+        self.comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')
+
+    def getSentimentResult(self, text):
+        return self.comprehend.detect_sentiment(Text=text, LanguageCode='en')
+
+    def getKeywordResult(self, text):
+        return self.comprehend.detect_key_phrases(Text=text, LanguageCode='en')
+
 
 
 class linkParser(HTMLParser):
@@ -213,7 +227,7 @@ class Fidelity():
 
             article = re.sub(' +', ' ', article)
             articleContent.append(article)
-            # print(article)
+            print(article)
             final_art.append(article)
 
             if len(articleContent) == len(result):
@@ -242,10 +256,21 @@ def getAwsResult(stock_name):
 
     sentiment = []
     keywords = []
+    keyword_trimmed = []
+    words_string = ''
 
     for elem in articleContent:
         sentiment.append(aws.getSentimentResult(elem))
         keywords.append(aws.getKeywordResult(elem))
+
+    for elem in keywords:
+        
+        for words in elem['KeyPhrases']:
+            words_string += (words['Text'] + ' ')
+        
+        keyword_trimmed.append(words_string)
+        print(words_string)
+        words_string = ''
 
     # Join Database
     conn = pymysql.connect( 
@@ -258,19 +283,15 @@ def getAwsResult(stock_name):
     # Declare cursor for use query  
     cursor=conn.cursor()
     # Insert article datas into the table
-    sql = 'INSERT INTO fidelity (stockName, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s)'
-    for i in range(0,len(output)):
+    sql = 'INSERT INTO fidelity (stockName, articleTime, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s, %s)'
 
-        for elem in keywords:
-            for words in elem['keyPhrases']:
-                words_string += (words['Text'] + ' ')
-        
-        cursor.execute(sql,(stock_name, words_string, sentiment[i]['SentimentScore']['Positive'],
+    for i in range(len(articleContent)):
+        cursor.execute(sql,(stock_name, articleDate[i], keyword_trimmed[i],
+            sentiment[i]['SentimentScore']['Positive'],
             sentiment[i]['SentimentScore']['Negative'],
             sentiment[i]['SentimentScore']['Mixed'],
             sentiment[i]['SentimentScore']['Neutral']))
-        words_string = ''
-    # Quit connection program and database
+
     conn.close()
 
 if __name__ in "__main__":

@@ -89,22 +89,28 @@ To run this application on your own, you need to meet requirements shown below.
 1. This application requires Python 3.  If you don't have it already installed, visit [here](https://www.python.org/downloads/) and download the lastest version.  
 
 2. Use command below to install necessary modules for Python.  
+    **For Windows user, run with --user flag**  
     `$ pip install awscli`  
-    `$ pip install boto3`
+    
+    `$ pip install boto3`  
+    
+    `$ pip install pymysql`  
 
 3. Set up linux server.  Here, we use Ubuntu 16.04 with LAMP installed.  
+    **This is required if you want to run it on your own server!!**  
     `$ sudo apt install apache2`  
-    `$ sudo apt install mysql-server` (Install the module for using >>> import pymysql )
-      **or** pip install PyMySQL (You must install pip before you can implement pip. sudo apt install python-pip)
 
-    **This may vary depending on your choice**  
+    `$ sudo apt install mysql-server`  
+    
     `$ sudo apt install php php-mysql`  
-    **or**  
-    install python3 on linux  
 
 4. Put Webpage in apache2 directory.  
     `/var/www/html` is the default location for web files.  
 
-5. Register parsers in crontab.  This is not mandatory but preferred.  
+5. Login AWS and create IAM User for AWS Comprehend API Access.  For more info, visit [here](https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-install.html).  
 
-6. TBD  
+6. You are all set!!  
+
+### How to run Stocker  
+
+

@@ -310,9 +310,6 @@ if __name__ in "__main__":
     # Declare crawler object to use
     parser = Fidelity()
 
-    # Declare AWS access object
-    aws = AWSAccess()
-
     target = []
     for pagenum in range(0, 1):
         target.append(stock_link1 + str(pagenum+1) +
@@ -326,7 +323,7 @@ if __name__ in "__main__":
     # sort url, title in chronological order ////////
     output.sort()
     for i in output:
-        articleDate.append(i[0:8])
+        articleDate.append(i[0:12])
 
     for i in range(0, len(output)):
         result[i] = temp_result[int(output[i].split('=')[1])-1]
@@ -342,3 +339,5 @@ if __name__ in "__main__":
     get_article_info()
 
     getAwsResult(stock_name)
+
+    print("Success")

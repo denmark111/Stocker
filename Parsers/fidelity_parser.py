@@ -281,7 +281,7 @@ def getAwsResult(stock_name):
     # Declare cursor for use query  
     cursor=conn.cursor()
     # Insert article datas into the table
-    sql = 'INSERT INTO fidelity (stockName, articleTime, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+    sql = 'INSERT IGNORE INTO fidelity (stockName, articleTime, keyWords, positiveRate, negativeRate, mixedRate, neutralRate) VALUES (%s, %s, %s, %s, %s, %s, %s)'
 
     for i in range(len(articleContent)):
         cursor.execute(sql,(stock_name, articleDate[i], keyword_trimmed[i],

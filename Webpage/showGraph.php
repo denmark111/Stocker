@@ -40,7 +40,7 @@
         window.onload = function() {
 
             <?php
-                echo $_SESSION['result'];
+                echo $_SESSION["positive"];
             ?>
 
             /*

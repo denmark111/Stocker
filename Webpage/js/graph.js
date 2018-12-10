@@ -1,6 +1,10 @@
-function getChartData(result) {
+function getChartData(pos, neg, mix, neu) {
   var barChartData = {
     labels: [
+      "January",
+      "February",
+      "March",
+      "April",
       "May",
       "June",
       "July",
@@ -16,7 +20,7 @@ function getChartData(result) {
         backgroundColor: "lightgreen",
         borderColor: "green",
         borderWidth: 1,
-        data: result["neutral"]
+        data: neu
         //data: [3, 5, 6, 7, 3, 5, 6, 7]
       },
       {
@@ -24,7 +28,7 @@ function getChartData(result) {
         backgroundColor: "lightblue",
         borderColor: "blue",
         borderWidth: 1,
-        data: result["positive"]
+        data: pos
         //data: [4, 7, 3, 6, 10, 7, 4, 6]
       },
       {
@@ -32,7 +36,7 @@ function getChartData(result) {
         backgroundColor: "pink",
         borderColor: "red",
         borderWidth: 1,
-        data: result["negative"]
+        data: neg
         //data: [10, 7, 4, 6, 9, 7, 3, 10]
       },
       {
@@ -40,7 +44,7 @@ function getChartData(result) {
         backgroundColor: "yellow",
         borderColor: "orange",
         borderWidth: 1,
-        data: result["mixed"]
+        data: mix
         //data: [6, 9, 7, 3, 10, 7, 4, 6]
       }
     ]

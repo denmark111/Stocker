@@ -119,7 +119,7 @@ To run this application on your own, you need to meet requirements shown below.
     `$ python3 fidelity_parser.py amzn`
 
 2. If you're running your own web server, visit [localhost/index.html](http://localhost/index.html).  
-If you're using our server, you can visit [this page](210.117.181.240/Webpage/index.html).  
+If you're using our server, you can visit [this page](http://210.117.181.240/Webpage/index.html).  
 *Server status not guaranteed*
 
 3. Search with stock name and check result!!

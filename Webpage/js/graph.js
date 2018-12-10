@@ -1,14 +1,14 @@
 function getChartData(result) {
   var barChartData = {
     labels: [
-      "April",
       "May",
       "June",
       "July",
       "Augest",
       "September",
       "October",
-      "November"
+      "November",
+      "December"
     ],
     datasets: [
       {

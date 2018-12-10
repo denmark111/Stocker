@@ -15,7 +15,7 @@ class AWSAccess():
 
 if __name__ in '__main__':
 
-    sample = 'But negotiators here ran into serious trouble when Saudi Arabia, the US, Russia and Kuwait objected to the conference "welcoming" the document. Instead they wanted to support a much more lukewarm phrase, that the conference would "take note" of the report. Saudi Arabia had fought until the last minute in Korea to limit the conclusions of the document. Eventually they gave in. But it now seems that they have brought their objections to Poland. The dispute dragged on as huddles of negotiators met in corners of the plenary session here, trying to agree a compromise wording.'
+    sample = 'Dec 6 (Reuters) - Walgreens Boots Alliance (WBA) said onThursday it would partner with FedEx Corp (FDX) to launch anext-day delivery service for prescription drugs nationwide,giving it a leg up as Amazon (AMZN) threatens to shake-up the sector.In the race to make inroads in the on-demand drug deliveryspace, Walgreens move could potentially put it head-to-headwith Amazon.com Inc (AMZN), which earlier this year said itwould buy online pharmacy PillPack.Amazons (AMZN) entry in the market would rattle traditional drugretailers and could potentially disrupt major players the U.S.drug supply chain.Rival CVS Health Corp (CVS) launched its own next-daydelivery service earlier this year.Walgreens said patients can have qualifying prescriptionsdelivered to their doorstep as early as the next day for $4.99.Same-day drug delivery is already available in certainmarkets and will be expanded in 2019, Walgreens said.'
 
     result = []
     words_string = ''
@@ -24,8 +24,11 @@ if __name__ in '__main__':
 
     result.append(aws.getKeywordResult(sample))
 
-    for elem in result:
-        for words in elem['KeyPhrases']:
-            words_string += (words['Text'] + ' ')
-        print(words_string)
-        words_string = ''
+    # print(json.dumps(aws.getKeywordResult(sample)))
+    print(json.dumps(aws.getSentimentResult(sample)))
+
+    # for elem in result:
+    #     for words in elem['KeyPhrases']:
+    #         words_string += (words['Text'] + ' ')
+    #     print(words_string)
+    #     words_string = ''

@@ -9,6 +9,7 @@ import time
 import boto3
 import json
 import pymysql.cursors
+import sys
 
 datas = []  # Global variable for storing temporary parsed data
 output = []  # Global varialbe for sorting URL date
@@ -226,7 +227,7 @@ class Fidelity():
 
             article = re.sub(' +', ' ', article)
             articleContent.append(article)
-            print(article)
+            # print(article)
             final_art.append(article)
 
             if len(articleContent) == len(result):
@@ -266,7 +267,7 @@ def getAwsResult(stock_name):
             words_string += (words['Text'] + ' ')
         
         keyword_trimmed.append(words_string)
-        print(words_string)
+        # print(words_string)
         words_string = ''
 
     # Join Database
@@ -316,7 +317,7 @@ def compareDups(currentTime):
 
 if __name__ in "__main__":
 
-    stock_name = input()
+    stock_name = sys.argv[1]
     stock_link1 = 'https://search.fidelity.com/search/getNewsSearchResults?question=' + \
         stock_name + '&originatingpage=NSRP&NSRPpageSelected='
     stock_link2 = '&navState=root%7Croot-'

@@ -1,5 +1,5 @@
 <?php
-/*
+
 	$stock_name = htmlspecialchars($_POST["stock-name"]);
 	# $parser_type = htmlspecialchars($_POST["type"]);
 
@@ -39,7 +39,6 @@
 	}
 	
 	$parser = substr($parser, 0, -3);
-*/
 
 	$stock_name = "amzn";
 	$parser = "fidelity";
@@ -159,7 +158,7 @@
 			var mix = <?php echo json_encode($mixed);?>;
 			var neu = <?php echo json_encode($neutral);?>;
 
-           	var keyword = <?php echo $keywords;?>;
+           	var keyword = "<?php echo $keywords;?>";
 
             new TradingView.widget(
               {
@@ -178,9 +177,6 @@
               }
             );
             
-            console.log(result);
-            console.log(keyword);
-            
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myBar = new Chart(ctx, {
               type: "bar",
@@ -189,7 +185,7 @@
             });
             
             var wCloud = document.getElementById("chart");
-            window.myCloud = drawWordCloud(keywords, wCloud);
+            window.myCloud = drawWordCloud(keyword, wCloud);
         };
     </script>
 

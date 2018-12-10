@@ -213,6 +213,7 @@ class Fidelity():
 
             article = temp_article
 
+            article = re.sub('\'', ' ', article)
             article = re.sub('(END).*', ' ', article)
             article = re.sub(',"receivedTime".*', ' ', article)
             article = re.sub('","service".*', ' ', article)

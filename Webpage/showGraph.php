@@ -43,8 +43,12 @@
                 echo $_SESSION['result'];
             ?>
 
+            /*
             var result = "<?php echo json_encode($_SESSION['result']); ?>";
             var keyword = "<?php echo $_SESSION['keywords']; ?>";
+            */
+
+           var keyword = 
 
             new TradingView.widget(
               {

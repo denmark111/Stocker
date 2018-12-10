@@ -1,4 +1,4 @@
-function getChartData() {
+function getChartData(result) {
   var barChartData = {
     labels: [
       "April",
@@ -12,32 +12,36 @@ function getChartData() {
     ],
     datasets: [
       {
-        label: "Netural",
+        label: "Neutral",
         backgroundColor: "lightgreen",
         borderColor: "green",
         borderWidth: 1,
-        data: [3, 5, 6, 7, 3, 5, 6, 7]
+        data: result["neutral"]
+        //data: [3, 5, 6, 7, 3, 5, 6, 7]
       },
       {
         label: "Positive",
         backgroundColor: "lightblue",
         borderColor: "blue",
         borderWidth: 1,
-        data: [4, 7, 3, 6, 10, 7, 4, 6]
+        data: result["positive"]
+        //data: [4, 7, 3, 6, 10, 7, 4, 6]
       },
       {
         label: "Negative",
         backgroundColor: "pink",
         borderColor: "red",
         borderWidth: 1,
-        data: [10, 7, 4, 6, 9, 7, 3, 10]
+        data: result["negative"]
+        //data: [10, 7, 4, 6, 9, 7, 3, 10]
       },
       {
         label: "Mixed",
         backgroundColor: "yellow",
         borderColor: "orange",
         borderWidth: 1,
-        data: [6, 9, 7, 3, 10, 7, 4, 6]
+        data: result["mixed"]
+        //data: [6, 9, 7, 3, 10, 7, 4, 6]
       }
     ]
   };
@@ -135,6 +139,7 @@ function drawWordCloud(text_string, attr) {
   d3.layout.cloud().stop();
 }
 
+/*
 window.onload = function() {
 
   new TradingView.widget(
@@ -154,14 +159,18 @@ window.onload = function() {
     }
   );
 
+  console.log(result);
+  console.log(keyword);
+
   var ctx = document.getElementById("canvas").getContext("2d");
   window.myBar = new Chart(ctx, {
     type: "bar",
-    data: getChartData(),
+    data: getChartData(window.result),
     options: getChartOption()
   });
 
   var wCloud = document.getElementById("chart");
-  var text_string = "Of course that’s your contention. You’re a first year grad student. You just got finished readin’ some Marxian historian, Pete Garrison probably. You’re gonna be convinced of that ’til next month when you get to James Lemon and then you’re gonna be talkin’ about how the economies of Virginia and Pennsylvania were entrepreneurial and capitalist way back in 1740. That’s gonna last until next year. You’re gonna be in here regurgitating Gordon Wood, talkin’ about, you know, the Pre-Revolutionary utopia and the capital-forming effects of military mobilization… ‘Wood drastically underestimates the impact of social distinctions predicated upon wealth, especially inherited wealth.’ You got that from Vickers, Work in Essex County, page 98, right? Yeah, I read that, too. Were you gonna plagiarize the whole thing for us? Do you have any thoughts of your own on this matter? Or do you, is that your thing? You come into a bar. You read some obscure passage and then pretend, you pawn it off as your own, as your own idea just to impress some girls and embarrass my friend? See, the sad thing about a guy like you is in 50 years, you’re gonna start doin’ some thinkin’ on your own and you’re gonna come up with the fact that there are two certainties in life. One: don’t do that. And two: you dropped a hundred and fifty grand on a fuckin’ education you coulda got for a dollar fifty in late charges at the public library.";
+  var text_string = window.keyword
   window.myCloud = drawWordCloud(text_string, wCloud);
 };
+*/

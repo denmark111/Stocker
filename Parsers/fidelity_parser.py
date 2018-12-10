@@ -227,7 +227,7 @@ class Fidelity():
 
             article = re.sub(' +', ' ', article)
             articleContent.append(article)
-            # print(article)
+            print(article)
             final_art.append(article)
 
             if len(articleContent) == len(result):
@@ -267,7 +267,7 @@ def getAwsResult(stock_name):
             words_string += (words['Text'] + ' ')
         
         keyword_trimmed.append(words_string)
-        # print(words_string)
+        print(words_string)
         words_string = ''
 
     # Join Database
@@ -332,7 +332,7 @@ if __name__ in "__main__":
     parser = Fidelity()
 
     target = []
-    for pagenum in range(0, 1):
+    for pagenum in range(2, 3):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
         parser._getLinks(target[pagenum])

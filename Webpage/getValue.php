@@ -3,10 +3,9 @@
 	$stock_name = htmlspecialchars($_POST["stock-name"]);
 	# $parser_type = htmlspecialchars($_POST["type"]);
 
-	echo "<p>" . $stock_name . "</p>";
-
+	# echo "stock name : " . $stock_name;
 	
-	$parser_type = 1;
+	$parser_type = 2;
 
 	if ($parser_type === 1)
 	{
@@ -27,21 +26,27 @@
 		sleep(3);
 		header("Location: " . $_SERVER["HTTP_REFERER"]);
 	}
-	$command = escapeshellcmd("python3 ../parsers/" . $parser . " " . $stock_name);
+	$cmd = "python3 ./parsers/" . $parser . " " . $stock_name;
+
+	# echo "cmd : " . $cmd;
+
+	$command = escapeshellcmd($cmd);
 	$output = shell_exec($command);
+
+	# echo "output : " . $output;
 
 	if (strcmp($output, "Success") !== 0)
 	{
 		// Print crawling fail error log
 		echo "<p>" . $output . "</p>";
 		sleep(3);
-		header("Location: " . $_SERVER["HTTP_REFERER"]);
+		# header("Location: " . $_SERVER["HTTP_REFERER"]);
 	}
 	
 	$parser = substr($parser, 0, -3);
 
-	$stock_name = "amzn";
-	$parser = "fidelity";
+	# $stock_name = "amzn";
+	# $parser = "fidelity";
 
 	$db_host = "210.117.181.240";
 	$db_user = "home_user";
@@ -158,13 +163,15 @@
 			var mix = <?php echo json_encode($mixed);?>;
 			var neu = <?php echo json_encode($neutral);?>;
 
-           	var keyword = "<?php echo $keywords;?>";
+			var keyword = "<?php echo $keywords;?>";
+			   
+			var stockName = "<?php echo $stock_name;?>";
 
             new TradingView.widget(
               {
                 "width": 1900,
                 "height": 400,
-                "symbol": "NASDAQ:AAPL",
+                "symbol": "NASDAQ:" + stockName,
                 "interval": "D",
                 "timezone": "Etc/UTC",
                 "theme": "Light",

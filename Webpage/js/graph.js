@@ -21,7 +21,6 @@ function getChartData(pos, neg, mix, neu) {
         borderColor: "green",
         borderWidth: 1,
         data: neu
-        //data: [3, 5, 6, 7, 3, 5, 6, 7]
       },
       {
         label: "Positive",
@@ -29,7 +28,6 @@ function getChartData(pos, neg, mix, neu) {
         borderColor: "blue",
         borderWidth: 1,
         data: pos
-        //data: [4, 7, 3, 6, 10, 7, 4, 6]
       },
       {
         label: "Negative",
@@ -37,7 +35,6 @@ function getChartData(pos, neg, mix, neu) {
         borderColor: "red",
         borderWidth: 1,
         data: neg
-        //data: [10, 7, 4, 6, 9, 7, 3, 10]
       },
       {
         label: "Mixed",
@@ -45,7 +42,6 @@ function getChartData(pos, neg, mix, neu) {
         borderColor: "orange",
         borderWidth: 1,
         data: mix
-        //data: [6, 9, 7, 3, 10, 7, 4, 6]
       }
     ]
   };

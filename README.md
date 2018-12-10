@@ -35,8 +35,6 @@ As shown above, Stocker is consisted with 4 main parts.
 
 3. [www.fidelity.com](https://www.fidelity.com)
 
-4. TBD
-
 ### Machine learning integration w/ AWS Comprehend
 
 Machine learning text analyzer used in this project is AWS Comprehend.  
@@ -79,9 +77,9 @@ To run this application on your own, you need to meet requirements shown below.
 - **Apache web server**
 
     Required to actually run the application.  
-    
+
 - **MySQL**
-    
+
     Store data processed by AWS service using MySQL
 
 ### Installation
@@ -91,9 +89,9 @@ To run this application on your own, you need to meet requirements shown below.
 2. Use command below to install necessary modules for Python.  
     **For Windows user, run with --user flag**  
     `$ pip install awscli`  
-    
+
     `$ pip install boto3`  
-    
+
     `$ pip install pymysql`  
 
 3. Set up linux server.  Here, we use Ubuntu 16.04 with LAMP installed.  
@@ -101,7 +99,7 @@ To run this application on your own, you need to meet requirements shown below.
     `$ sudo apt install apache2`  
 
     `$ sudo apt install mysql-server`  
-    
+
     `$ sudo apt install php php-mysql`  
 
 4. Put Webpage in apache2 directory.  
@@ -113,14 +111,12 @@ To run this application on your own, you need to meet requirements shown below.
 
 ### How to run Stocker  
 
-1. Run crawler with stock name as first argument. For example,    
+1. Run crawler with stock name as first argument. For example,  
 
     `$ python3 fidelity_parser.py aapl`  
     `$ python3 fidelity_parser.py amzn`
 
-2. If you're running your own web server, visit [localhost/index.html](http://localhost/index.html).  
-If you're using our server, you can visit [this page](http://210.117.181.240/Webpage/index.html).  
-*Server status not guaranteed*
+2. If you're running your own web server, visit [localhost/index.html](http://localhost:8080/index.html).  If you're using our server, you can visit [this page](http://210.117.181.240:8080/Webpage/index.html).  *Server status not guaranteed*
 
 3. Search with stock name and check result!!
 

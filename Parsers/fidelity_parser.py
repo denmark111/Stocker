@@ -332,7 +332,7 @@ if __name__ in "__main__":
     parser = Fidelity()
 
     target = []
-    for pagenum in range(0, 1):
+    for pagenum in range(2, 3):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
         parser._getLinks(target[pagenum])

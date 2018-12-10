@@ -18,7 +18,7 @@ result = []  # Global varialbe for getting URL in fidelity.com
 articleTitle = []  # Global varialbe for storing article title
 articleDate = []  # Global varialbe for storing article title
 articleContent = []  # Global varialbe for storing article content
-
+pagelimit=''
 
 class AWSAccess():
 
@@ -39,7 +39,7 @@ class linkParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If not 'a' skip to the next page
-        if tag != 'a':
+        if tag != 'a' or tag != 'div':
             return
 
         # If 'a', get tag attributes
@@ -168,7 +168,12 @@ class Fidelity():
         # Iterate each html line and get reference link
         # !! This is website specific !!
         for l in datas:
-            if 'target' in l and 'title' in l:
+            if 'class' in l:
+                if l['class'] =='relevance-left':
+                   pagelimit = l['class'].split('of ')[1]
+                   pagelimit = int(pagelimit.split(' Results')[0])
+                   int(pagelimit)
+            elif 'target' in l and 'title' in l:
                 if l['target'] == '_top':
                     # Top list always contains trash link
                     if l['href'] != 'https://www.fidelity.com/sector-investing/overview':
@@ -336,7 +341,10 @@ if __name__ in "__main__":
     parser = Fidelity()
 
     target = []
-    for pagenum in range(2, 3):
+
+    pagelimit = pagelimit % 10
+
+    for pagenum in range(0, pagelimit+1):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
         parser._getLinks(target[pagenum])

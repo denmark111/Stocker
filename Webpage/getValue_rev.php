@@ -1,11 +1,6 @@
 <?php
 
-	$stock_name = $_POST['stock-name'];
-	echo "stock name : " . $stock_name;
-/*
-	$parser_type = htmlspecialchars($_POST["type"]);
-
-	echo "stock name : " . $stock_name;
+	$stock_name = htmlspecialchars($_POST["stock-name"]);
 	
 	$parser_type = 2;
 
@@ -30,12 +25,11 @@
 	}
 	$cmd = "python3 ./parsers/" . $parser . " " . $stock_name;
 
-	echo "cmd : " . $cmd;
-
 	$command = escapeshellcmd($cmd);
-	$output = shell_exec($command);
+/*
+    $output = shell_exec($command);
 
-	echo "output : " . $output;
+	# echo "output : " . $output;
 
 	if (strcmp($output, "Success") !== 0)
 	{
@@ -44,14 +38,8 @@
 		sleep(3);
 		# header("Location: " . $_SERVER["HTTP_REFERER"]);
 	}
-	
+*/	
 	$parser = substr($parser, 0, -3);
-
-
-	$stock_name = "amzn";
-*/
-	$parser = "fidelity";
-
 
 	$db_host = "210.117.181.240";
 	$db_user = "home_user";
@@ -95,8 +83,6 @@
 
 				$keywords .= (str_replace("'", " ", $row["keyWords"]) . " ");
 			}
-
-			$res->free();
 		}
 		else
 		{
@@ -113,6 +99,8 @@
 				$neutral[$i] /= $row_cnt[$i];
 			}
 		}
+
+		$res->free();
 	}
 	else
 	{
@@ -187,8 +175,11 @@
                 "allow_symbol_change": true,
                 "container_id": "tradingview_85c60"
               }
-			);
-			
+            );
+            
+            console.log(result);
+            console.log(keyword);
+            
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myBar = new Chart(ctx, {
               type: "bar",
@@ -197,7 +188,7 @@
             });
             
             var wCloud = document.getElementById("chart");
-            window.myCloud = drawWordCloud(keyword, wCloud);
+            window.myCloud = drawWordCloud(keywords, wCloud);
         };
     </script>
 

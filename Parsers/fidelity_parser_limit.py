@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 from html.parser import HTMLParser
 import urllib.request
 import urllib.error
@@ -10,6 +8,7 @@ import boto3
 import json
 import pymysql.cursors
 import sys
+from sys import getsizeof
 
 datas = []  # Global variable for storing temporary parsed data
 output = []  # Global varialbe for sorting URL date
@@ -17,7 +16,7 @@ result = []  # Global varialbe for getting URL in fidelity.com
 articleTitle = []  # Global varialbe for storing article title
 articleDate = []  # Global varialbe for storing article title
 articleContent = []  # Global varialbe for storing article content
-
+pagelimit=''
 
 class AWSAccess():
 
@@ -38,7 +37,7 @@ class linkParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
 
         # If not 'a' skip to the next page
-        if tag != 'a':
+        if tag != 'a' or tag != 'div':
             return
 
         # If 'a', get tag attributes
@@ -105,8 +104,11 @@ class articleParser(HTMLParser):
     def handle_data(self, data):
         if self.recording and self.inArticleDiv:
             if not self.inUselessDiv:
-                datas.append(data)
-
+                if len(data) < 5000:
+                    datas.append(data)
+                else :
+                    data = data[:5000]
+                    datas.append(data)
 
 class Fidelity():
 
@@ -136,7 +138,7 @@ class Fidelity():
             f.close()
 
             # Time delay for crawler anti-block
-            time.sleep(1)
+            time.sleep(3)
         # Basic error handling
         except urllib.error.HTTPError as e:
             print(e, 'while fetching', url)
@@ -164,7 +166,12 @@ class Fidelity():
         # Iterate each html line and get reference link
         # !! This is website specific !!
         for l in datas:
-            if 'target' in l and 'title' in l:
+            if 'class' in l:
+                if l['class'] =='relevance-left':
+                   pagelimit = l['class'].split('of ')[1]
+                   pagelimit = int(pagelimit.split(' Results')[0])
+                   int(pagelimit)
+            elif 'target' in l and 'title' in l:
                 if l['target'] == '_top':
                     # Top list always contains trash link
                     if l['href'] != 'https://www.fidelity.com/sector-investing/overview':
@@ -258,8 +265,8 @@ def getAwsResult(stock_name):
     words_string = ''
 
     for elem in articleContent:
-        sentiment.append(aws.getSentimentResult(elem[:3000]))
-        keywords.append(aws.getKeywordResult(elem[:3000]))
+        sentiment.append(aws.getSentimentResult(elem))
+        keywords.append(aws.getKeywordResult(elem))
 
     for elem in keywords:
         
@@ -332,12 +339,13 @@ if __name__ in "__main__":
     parser = Fidelity()
 
     target = []
-    pageStart = 0
-    pageEnd = 7
-    for pagenum in range(pageStart, pageEnd):
+
+    pagelimit = pagelimit % 10
+
+    for pagenum in range(0, pagelimit):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
-        parser._getLinks(target[pagenum - pageStart])
+        parser._getLinks(target[pagenum])
     # Insert page number to the link
     temp_result = result.copy()
     # Copy article titile for sorting

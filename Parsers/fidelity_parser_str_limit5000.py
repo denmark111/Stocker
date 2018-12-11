@@ -344,7 +344,7 @@ if __name__ in "__main__":
 
     pagelimit = pagelimit % 10
 
-    for pagenum in range(0, pagelimit+1):
+    for pagenum in range(0, pagelimit):
         target.append(stock_link1 + str(pagenum+1) +
                       stock_link2 + str(pagenum*10) + stock_link3)
         parser._getLinks(target[pagenum])

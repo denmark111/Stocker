@@ -173,6 +173,8 @@ class Fidelity():
                    pagelimit = l['class'].split('of ')[1]
                    pagelimit = int(pagelimit.split(' Results')[0])
                    int(pagelimit)
+                   if pagelimit > 100:
+                        pagelimit = 100
             elif 'target' in l and 'title' in l:
                 if l['target'] == '_top':
                     # Top list always contains trash link
